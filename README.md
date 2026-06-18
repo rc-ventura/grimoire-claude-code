@@ -1,5 +1,7 @@
 # Firetop Mountain Plugin Registry
 
+![The Warlock of Firetop Mountain](docs/assets/warlock-center.jpg)
+
 > A [Claude Code](https://claude.com/claude-code) plugin marketplace themed after the Fighting Fantasy gamebook *The Warlock of Firetop Mountain*.
 
 Distributes the **SDD (Software-Driven Development)** multi-agent review pipeline as native Claude Code plugins.
