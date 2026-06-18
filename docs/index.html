@@ -42,7 +42,7 @@
   .m-title{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(20px,2.4vw,26px);letter-spacing:.01em;line-height:1.15;margin:6px 0 4px}
   .m-plugin{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#9a7848;margin-bottom:8px}
   .m-tagline{font-style:italic;font-size:16px;line-height:1.5;color:#6a5030}
-  .m-img{width:60%;height:auto;border-radius:4px;margin:20px auto;display:block;}
+  .m-img{width:70%;height:auto;border-radius:4px;margin:20px auto;display:block;}
   .m-img-placeholder{width:100%;height:180px;border-radius:4px;border:1.5px dashed rgba(90,66,32,.4);background:linear-gradient(#e4d6b7,#ddd0a8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin:20px 0;color:#9a8458;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;overflow:hidden}
   .m-sec{margin-top:20px}
   .m-sec-title{font-family:'Cinzel',serif;font-weight:600;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:#9a7848;border-bottom:1px solid rgba(90,66,32,.22);padding-bottom:4px;margin-bottom:10px}
@@ -485,11 +485,6 @@ var modalContent=document.getElementById('modal-content');
 function dcModal(id){
   var s=SKILLS[id]; if(!s) return;
 
-  // image area: placeholder div or actual <img>
-  var imgHtml=s.img
-    ?'<img src="'+s.img+'" class="m-img" alt="'+s.title+'" />'
-    :'<div class="m-img-placeholder"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>';
-
   var verdictsHtml='';
   if(s.verdicts.length){
     verdictsHtml='<div class="m-sec"><div class="m-sec-title">Verdicts</div>'+
@@ -504,7 +499,6 @@ function dcModal(id){
       '<p class="m-tagline">'+s.tagline+'</p>'+
     '</div>'+
     '<div class="m-body">'+
-      imgHtml+
       '<div class="m-sec"><div class="m-sec-title">Description</div><p class="m-p">'+s.description+'</p></div>'+
       '<div class="m-sec"><div class="m-sec-title">How it works</div>'+
         s.steps.map(function(st,i){return'<div class="m-step"><div class="m-n">'+(i+1)+'</div><div class="m-step-txt">'+st+'</div></div>';}).join('')+
