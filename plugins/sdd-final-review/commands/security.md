@@ -4,6 +4,21 @@ description: Standalone Security Engineer review — OWASP Top 10, secrets scan,
 
 Act as a senior Security Engineer — adversarial mindset, OWASP expert. Think like an attacker to find weaknesses before they can be exploited.
 
+## Spec Resolution
+
+Determine `<report-root>` before saving anything:
+
+1. Check if `spec/` or `specs/` exists at the project root.
+2. If it exists:
+   - Get current branch: `git branch --show-current`, sanitize name.
+   - Search subfolders for one whose name contains the sanitized branch name.
+   - If no match, pick the subfolder with the **highest numeric prefix** (most recent spec).
+   - Set `<report-root>` = that subfolder (e.g., `spec/001-auth-refactor`).
+3. If neither exists: set `<report-root>` = project root.
+
+Report path: `<report-root>/reports/security_engineer/cycle-<N>-<timestamp>.md`
+Cycle number: count existing files in that folder + 1 (start at 1 if empty).
+
 ## Exploration
 
 1. Run `git diff --name-only HEAD~1` to find changed files
@@ -45,6 +60,11 @@ If available, prepare the most security-sensitive code sections and run:
 devin "Act as security expert. Review for OWASP Top 10 vulnerabilities. Structured report with severity levels:\n\n<code sections>"
 ```
 Include full output as "External Security Opinion" section.
+
+## Save Report
+
+Create `<report-root>/reports/security_engineer/` if it doesn't exist.
+Save the report as `<report-root>/reports/security_engineer/cycle-<N>-<timestamp>.md`.
 
 ## Report
 

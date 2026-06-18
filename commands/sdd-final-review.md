@@ -7,14 +7,25 @@ Execute the full SDD final review pipeline for the current implementation.
 ## Step 1: Identify Review Context
 
 - **Spec/Feature ID**: Use `$ARGUMENTS` if provided. Otherwise run `git branch --show-current` and sanitize the branch name (e.g., `feature/auth-refactor` → `auth-refactor`).
-- **Spec file lookup**: Search for a spec document matching the spec-id in common locations:
-  - `docs/<spec-id>*.md`, `docs/specs/<spec-id>*.md`, `specs/<spec-id>*.md`, `requirements/<spec-id>*.md`
-  - Also try: `docs/*.spec.md`, `specs/*.md` — pick the closest name match.
-  - If found, set `<report-root>` to the directory containing the spec file (e.g., `docs/`).
-  - If not found, set `<report-root>` to the project root (fallback).
-- **Report path**: `<report-root>/reports/sdd-final-review/<spec-id>/`
-- **Cycle number**: Check `<report-root>/reports/sdd-final-review/<spec-id>/` for existing files. Increment highest cycle found, or start at 1.
 - **Timestamp**: Current date/time as `YYYYMMDD-HHmm`.
+
+### Spec Resolution
+
+Determine `<report-root>` using this order:
+
+1. Check if `spec/` or `specs/` exists at the project root.
+2. If it exists:
+   - Search its subfolders for one whose name contains the sanitized branch/spec-id (e.g., `001-auth-refactor` matches `auth-refactor`).
+   - If no match, pick the subfolder with the **highest numeric prefix** (most recent spec).
+   - Set `<report-root>` = that subfolder (e.g., `spec/001-auth-refactor`).
+3. If neither `spec/` nor `specs/` exists: set `<report-root>` = project root.
+
+Report paths:
+- QA reports → `<report-root>/reports/qa_engineer/`
+- Security reports → `<report-root>/reports/security_engineer/`
+- Tech Leader reports → `<report-root>/reports/tech_leader/`
+
+**Cycle number**: count existing files in `<report-root>/reports/tech_leader/`, increment by 1 (or start at 1).
 
 ## Step 2: Parallel Review — QA Engineer + Security Engineer
 
@@ -174,9 +185,17 @@ Return this exact structure:
 
 ## Step 4: Save Report Artifact
 
-Create `<report-root>/reports/sdd-final-review/<spec-id>/` if it doesn't exist.
+Create the report folders if they don't exist:
+- `<report-root>/reports/qa_engineer/`
+- `<report-root>/reports/security_engineer/`
+- `<report-root>/reports/tech_leader/`
 
-Save to `<report-root>/reports/sdd-final-review/<spec-id>/cycle-<N>-<timestamp>.md`:
+Save each report to its folder as `cycle-<N>-<timestamp>.md`:
+- QA → `<report-root>/reports/qa_engineer/cycle-<N>-<timestamp>.md`
+- Security → `<report-root>/reports/security_engineer/cycle-<N>-<timestamp>.md`
+- Tech Leader → `<report-root>/reports/tech_leader/cycle-<N>-<timestamp>.md`
+
+The Tech Leader file contains the full consolidated report:
 
 ```markdown
 # SDD Final Review — <spec-id>
