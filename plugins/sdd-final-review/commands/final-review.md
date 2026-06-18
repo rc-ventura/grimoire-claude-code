@@ -7,7 +7,13 @@ Execute the full SDD final review pipeline for the current implementation.
 ## Step 1: Identify Review Context
 
 - **Spec/Feature ID**: Use `$ARGUMENTS` if provided. Otherwise run `git branch --show-current` and sanitize the branch name (e.g., `feature/auth-refactor` → `auth-refactor`).
-- **Cycle number**: Check `reports/sdd-final-review/<spec-id>/` for existing files. Increment highest cycle found, or start at 1.
+- **Spec file lookup**: Search for a spec document matching the spec-id in common locations:
+  - `docs/<spec-id>*.md`, `docs/specs/<spec-id>*.md`, `specs/<spec-id>*.md`, `requirements/<spec-id>*.md`
+  - Also try: `docs/*.spec.md`, `specs/*.md` — pick the closest name match.
+  - If found, set `<report-root>` to the directory containing the spec file (e.g., `docs/`).
+  - If not found, set `<report-root>` to the project root (fallback).
+- **Report path**: `<report-root>/reports/sdd-final-review/<spec-id>/`
+- **Cycle number**: Check `<report-root>/reports/sdd-final-review/<spec-id>/` for existing files. Increment highest cycle found, or start at 1.
 - **Timestamp**: Current date/time as `YYYYMMDD-HHmm`.
 
 ## Step 2: Parallel Review — QA Engineer + Security Engineer
@@ -168,9 +174,9 @@ Return this exact structure:
 
 ## Step 4: Save Report Artifact
 
-Create `reports/sdd-final-review/<spec-id>/` if it doesn't exist.
+Create `<report-root>/reports/sdd-final-review/<spec-id>/` if it doesn't exist.
 
-Save to `reports/sdd-final-review/<spec-id>/cycle-<N>-<timestamp>.md`:
+Save to `<report-root>/reports/sdd-final-review/<spec-id>/cycle-<N>-<timestamp>.md`:
 
 ```markdown
 # SDD Final Review — <spec-id>
