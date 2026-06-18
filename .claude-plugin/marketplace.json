@@ -1,0 +1,40 @@
+{
+  "name": "grimoire",
+  "description": "Firetop Mountain Plugin Registry — SDD multi-agent review pipeline and documentation tools for Claude Code.",
+  "owner": {
+    "name": "Rafael Ventura",
+    "email": "r.c_ventura@hotmail.com"
+  },
+  "plugins": [
+    {
+      "name": "sdd-final-review",
+      "displayName": "SDD Final Review",
+      "source": "./plugins/sdd-final-review",
+      "description": "Multi-agent review pipeline: QA + Security in parallel, then Tech Leader as dispatcher. Saves versioned cycle reports and posts verdicts to GitHub PRs.",
+      "version": "0.2.0",
+      "author": {
+        "name": "Rafael Ventura"
+      },
+      "homepage": "https://rc-ventura.github.io/grimoire-claude-code",
+      "repository": "https://github.com/rc-ventura/grimoire-claude-code",
+      "license": "MIT",
+      "category": "review",
+      "tags": ["sdd", "qa", "security", "review", "multi-agent", "tech-leader"]
+    },
+    {
+      "name": "sdd-create-docs",
+      "displayName": "SDD Create Docs",
+      "source": "./plugins/sdd-create-docs",
+      "description": "SDD authoring tools: /adr records Architecture Decision Records and /learning-lesson captures lessons learned. Auto-numbered files plus a maintained CLAUDE.md index.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Rafael Ventura"
+      },
+      "homepage": "https://rc-ventura.github.io/grimoire-claude-code",
+      "repository": "https://github.com/rc-ventura/grimoire-claude-code",
+      "license": "MIT",
+      "category": "documentation",
+      "tags": ["sdd", "adr", "docs", "learning-lessons", "documentation"]
+    }
+  ]
+}

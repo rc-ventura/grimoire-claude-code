@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🐉 The Grimoire of Claude Code · Firetop Mountain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#14100c}
+  @keyframes flick{0%,100%{opacity:.85;transform:scale(1)}45%{opacity:1;transform:scale(1.04)}70%{opacity:.78;transform:scale(.99)}}
+  @keyframes modalIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes dieSpin{50%{transform:rotate(200deg) scale(.85)}100%{transform:rotate(360deg)}}
+
+  .dc-cmd:hover{background:#352d24!important}
+  .dc-ink:hover{background:#3a3127!important}
+  .dc-details:hover{background:rgba(90,66,32,.15)!important}
+  .dc-install:hover{background:#3a3127!important}
+
+  .sprite{width:100%;height:120px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(90,66,32,.25)}
+
+  /* ── Modal ── */
+  #modal{display:none;position:fixed;inset:0;z-index:9000;background:rgba(10,7,4,.84);align-items:center;justify-content:center;padding:clamp(12px,4vw,36px)}
+  #modal.open{display:flex}
+  #modal-box{
+    animation:modalIn .2s ease;
+    position:relative;max-width:760px;width:100%;max-height:92vh;overflow-y:auto;
+    background:linear-gradient(#efe3c9,#e7d9bb);border-radius:6px;
+    box-shadow:0 40px 80px -20px rgba(0,0,0,.9),inset 0 0 0 1px rgba(120,90,40,.18),inset 0 0 80px rgba(120,90,40,.1);
+    background-image:radial-gradient(rgba(120,90,40,.05) 1px,transparent 1px),linear-gradient(#efe3c9,#e7d9bb);
+    background-size:5px 5px,100% 100%;
+    color:#2c2620;font-family:'EB Garamond',Georgia,serif;
+  }
+  #modal-close{position:absolute;top:12px;right:14px;background:none;border:1px solid rgba(90,66,32,.3);cursor:pointer;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9a8458;padding:4px 9px;border-radius:3px;}
+  #modal-close:hover{background:rgba(90,66,32,.1)}
+
+  .m-hd{padding:clamp(20px,3vw,36px) clamp(24px,4vw,48px) clamp(16px,2.5vw,28px);background:linear-gradient(rgba(255,255,255,.18),transparent)}
+  .m-body{padding:0 clamp(24px,4vw,48px) clamp(24px,4vw,40px)}
+  .m-cmd{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em}
+  .m-title{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(20px,2.4vw,26px);letter-spacing:.01em;line-height:1.15;margin:6px 0 4px}
+  .m-plugin{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#9a7848;margin-bottom:8px}
+  .m-tagline{font-style:italic;font-size:16px;line-height:1.5;color:#6a5030}
+  .m-img{width:100%;height:200px;border-radius:4px;border:1.5px dashed rgba(90,66,32,.4);background:linear-gradient(#e4d6b7,#ddd0a8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin:20px 0;color:#9a8458;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;overflow:hidden;object-fit:cover}
+  .m-img img{width:100%;height:100%;object-fit:cover;border-radius:4px;display:block}
+  .m-sec{margin-top:20px}
+  .m-sec-title{font-family:'Cinzel',serif;font-weight:600;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:#9a7848;border-bottom:1px solid rgba(90,66,32,.22);padding-bottom:4px;margin-bottom:10px}
+  .m-p{font-size:16px;line-height:1.6;color:#4a3820}
+  .m-step{display:flex;gap:12px;margin-bottom:9px;align-items:flex-start}
+  .m-n{flex-shrink:0;width:26px;height:26px;border:1.5px solid #2c2620;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:700;font-size:12px;color:#2c2620}
+  .m-step-txt{font-size:15.5px;line-height:1.5;color:#4a3820;padding-top:2px}
+  .m-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .m-tag{font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid;padding:3px 9px;border-radius:3px}
+  .m-verdict{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+  .m-vbadge{flex-shrink:0;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:3px;margin-top:2px;color:#ece0c6}
+  .m-vtext{font-size:15px;line-height:1.5;color:#4a3820}
+  .m-code{display:block;background:#2c2620;color:#ece0c6;font-family:'JetBrains Mono',monospace;font-size:12px;padding:10px 14px;border-radius:4px;margin-top:8px;white-space:pre-wrap;word-break:break-all}
+</style>
+</head>
+<body>
+
+<!-- ════════ MODAL ════════ -->
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div id="modal-box">
+    <button id="modal-close" onclick="dcCloseModal()">✕ Close</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- ════════ PAGE ════════ -->
+<div style="--ember:#c8631f;--gold:#d9a441;--parch:#ece0c6;--ink:#2c2620;--ink2:#62553f;--blood:#8f3a2a;--moss:#4c6b3f;--royal:#5a4a7a;--amber:#8a6d3b;font-family:'EB Garamond',Georgia,serif;min-height:100vh;padding:clamp(14px,3.5vw,48px);background:radial-gradient(120% 80% at 18% 0%,rgba(200,99,31,.22),transparent 46%),radial-gradient(120% 80% at 84% 6%,rgba(217,164,65,.16),transparent 50%),radial-gradient(140% 120% at 50% 120%,rgba(0,0,0,.6),transparent 60%),repeating-linear-gradient(90deg,#16120d 0 2px,#171109 2px 4px),linear-gradient(#161109,#0f0c08);">
+<div style="max-width:1080px;margin:0 auto;">
+
+  <!-- ── HERO ── -->
+  <header style="position:relative;text-align:center;padding:8px 0 40px;color:#efe1c1;">
+    <div aria-hidden="true" style="position:absolute;top:34px;left:6%;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 28px 12px rgba(200,99,31,.55);animation:flick 1.6s ease-in-out infinite;"></div>
+    <div aria-hidden="true" style="position:absolute;top:34px;right:6%;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 28px 12px rgba(200,99,31,.55);animation:flick 1.9s ease-in-out infinite;"></div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;color:var(--gold);font-family:'Cinzel',serif;font-weight:600;letter-spacing:.26em;font-size:13px;text-transform:uppercase;margin-bottom:26px;">
+      <span style="height:1px;width:46px;background:linear-gradient(90deg,transparent,var(--gold));"></span>
+      <span>🜂</span><span>Forged in the depths of Firetop Mountain</span><span>🜂</span>
+      <span style="height:1px;width:46px;background:linear-gradient(270deg,transparent,var(--gold));"></span>
+    </div>
+    <div style="position:relative;margin:0 auto 30px;width:min(680px,94vw);padding:12px;border:1px solid rgba(217,164,65,.5);border-radius:8px;background:linear-gradient(#1c1610,#120d08);box-shadow:0 28px 70px -26px rgba(0,0,0,.95),inset 0 0 60px rgba(200,99,31,.1);">
+      <div style="position:absolute;inset:5px;border:1px solid rgba(217,164,65,.25);border-radius:5px;pointer-events:none;z-index:2;"></div>
+      <img src="assets/warlock-center.jpg" alt="The Warlock of Firetop Mountain — Claude Code" style="display:block;width:100%;height:clamp(380px,52vw,560px);object-fit:cover;object-position:center 88%;border-radius:4px;" />
+    </div>
+    <h1 style="margin:0;font-family:'Cinzel Decorative',serif;font-weight:900;line-height:1.05;font-size:clamp(30px,4vw,46px);color:#f3e7c6;text-shadow:0 2px 0 #1c130a,0 0 34px rgba(200,99,31,.45);letter-spacing:.01em;">The Grimoire of Claude Code</h1>
+    <p style="max-width:660px;margin:26px auto 0;font-size:clamp(21px,2.4vw,27px);line-height:1.5;color:#ede0c0;font-weight:500;">A collection of skills and plugins for the adventurer who braves the <em style="color:var(--gold);font-style:normal;font-weight:600;">dungeons</em> of software development.</p>
+  </header>
+
+  <!-- ── PARCHMENT ── -->
+  <main style="position:relative;background:linear-gradient(#efe3c9,#e7d9bb);border-radius:6px;padding:clamp(22px,4vw,54px);color:var(--ink);box-shadow:0 40px 80px -30px rgba(0,0,0,.85),inset 0 0 0 1px rgba(120,90,40,.18),inset 0 0 120px rgba(120,90,40,.12);background-image:radial-gradient(rgba(120,90,40,.05) 1px,transparent 1px),linear-gradient(#efe3c9,#e7d9bb);background-size:5px 5px,100% 100%;">
+    <div style="position:absolute;inset:12px;border:1.5px solid rgba(90,66,32,.4);border-radius:3px;pointer-events:none;"></div>
+    <div style="position:absolute;inset:17px;border:1px solid rgba(90,66,32,.2);border-radius:2px;pointer-events:none;"></div>
+    <span style="position:absolute;top:9px;left:9px;color:var(--ember);font-size:14px;">◆</span>
+    <span style="position:absolute;top:9px;right:9px;color:var(--ember);font-size:14px;">◆</span>
+    <span style="position:absolute;bottom:9px;left:9px;color:var(--ember);font-size:14px;">◆</span>
+    <span style="position:absolute;bottom:9px;right:9px;color:var(--ember);font-size:14px;">◆</span>
+
+    <div style="position:relative;display:flex;flex-direction:column;gap:60px;">
+
+      <!-- ══ 1. HOW TO BEGIN (moved to top) ══ -->
+      <section style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;align-items:center;gap:14px;justify-content:center;text-align:center;">
+          <span style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(90,66,32,.45));"></span>
+          <span style="color:var(--ember);">◆</span>
+          <h2 style="margin:0;font-family:'Cinzel',serif;font-weight:700;font-size:15px;letter-spacing:.26em;text-transform:uppercase;">How to Begin Your Adventure</h2>
+          <span style="color:var(--ember);">◆</span>
+          <span style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(90,66,32,.45));"></span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:28px;">
+
+          <!-- §1 -->
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border:1.5px solid var(--ink);border-radius:50%;font-family:'Cinzel Decorative',serif;font-weight:700;font-size:15px;color:var(--ink);">§1</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+              <h3 style="margin:0;font-family:'Cinzel',serif;font-weight:600;font-size:16px;color:var(--ink);">Add the Grimoire marketplace</h3>
+              <p style="margin:0;font-size:15px;color:var(--ink2);line-height:1.5;">Inside Claude Code, run this command once. It registers the Grimoire as a known plugin source — no cloning, no terminal.</p>
+              <button onclick="dcCopy(this)" data-copy="/plugin marketplace add rc-ventura/grimoire-claude-code" class="dc-cmd" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#2c2620;color:#ece0c6;border-radius:4px;padding:11px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;">
+                <code style="white-space:pre-wrap;word-break:break-all;text-align:left;"><span style="color:var(--gold);">▸</span> /plugin marketplace add rc-ventura/grimoire-claude-code</code>
+                <span data-copylabel="" style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;">Copy</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- §2 -->
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border:1.5px solid var(--ink);border-radius:50%;font-family:'Cinzel Decorative',serif;font-weight:700;font-size:15px;color:var(--ink);">§2</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+              <h3 style="margin:0;font-family:'Cinzel',serif;font-weight:600;font-size:16px;color:var(--ink);">Install a plugin</h3>
+              <p style="margin:0;font-size:15px;color:var(--ink2);line-height:1.5;">Pick the plugin you want and install it — Claude Code downloads and loads it automatically.</p>
+
+              <div style="display:flex;flex-direction:column;gap:18px;margin-top:10px;">
+                <div>
+                  <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#9a7848;margin-bottom:6px;">Review pipeline — QA + Security + Tech Leader (4 skills)</div>
+                  <button onclick="dcCopy(this)" data-copy="/plugin install sdd-final-review@grimoire" class="dc-cmd" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;background:#2c2620;color:#ece0c6;border:1px solid #4a4234;border-radius:4px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12.5px;width:100%;">
+                    <span style="color:var(--gold);">▸</span>
+                    <code style="flex:1;white-space:pre-wrap;word-break:break-all;text-align:left;">/plugin install sdd-final-review@grimoire</code>
+                    <span data-copylabel="" style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;">Copy</span>
+                  </button>
+                </div>
+                <div>
+                  <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#9a7848;margin-bottom:6px;">Documentation tools — ADR + Learning Lessons (2 skills)</div>
+                  <button onclick="dcCopy(this)" data-copy="/plugin install sdd-create-docs@grimoire" class="dc-cmd" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;background:#2c2620;color:#ece0c6;border:1px solid #4a4234;border-radius:4px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12.5px;width:100%;">
+                    <span style="color:var(--gold);">▸</span>
+                    <code style="flex:1;white-space:pre-wrap;word-break:break-all;text-align:left;">/plugin install sdd-create-docs@grimoire</code>
+                    <span data-copylabel="" style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;">Copy</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- §3 -->
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border:1.5px solid var(--ink);border-radius:50%;font-family:'Cinzel Decorative',serif;font-weight:700;font-size:15px;color:var(--ink);">§3</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+              <h3 style="margin:0;font-family:'Cinzel',serif;font-weight:600;font-size:16px;color:var(--ink);">Invoke your skill</h3>
+              <p style="margin:0;font-size:15px;color:var(--ink2);line-height:1.5;">Skills are namespaced by plugin — type the incantation and your adventure begins. No restart needed.</p>
+              <button onclick="dcCopy(this)" data-copy="/sdd-final-review:final-review feature/auth-refactor" class="dc-cmd" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#2c2620;color:#ece0c6;border-radius:4px;padding:11px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;">
+                <code style="white-space:pre-wrap;word-break:break-all;text-align:left;"><span style="color:var(--gold);">▸</span> /sdd-final-review:final-review feature/auth-refactor</code>
+                <span data-copylabel="" style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;">Copy</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ 2. AVAILABLE TOMES ══ -->
+      <section style="display:flex;flex-direction:column;gap:22px;">
+        <div style="display:flex;align-items:center;gap:14px;justify-content:center;text-align:center;">
+          <span style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(90,66,32,.45));"></span>
+          <span style="color:var(--ember);">◆</span>
+          <h2 style="margin:0;font-family:'Cinzel',serif;font-weight:700;font-size:15px;letter-spacing:.26em;text-transform:uppercase;">Available Tomes</h2>
+          <span style="color:var(--ember);">◆</span>
+          <span style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(90,66,32,.45));"></span>
+        </div>
+
+        <!-- BOSS CARD -->
+        <article style="position:relative;border:2px solid var(--ink);border-radius:6px;background:linear-gradient(#e9dcbe,#e1d2b0);overflow:hidden;box-shadow:0 12px 30px -16px rgba(60,40,10,.5);">
+          <div style="height:5px;background:linear-gradient(90deg,var(--ember),var(--gold));"></div>
+          <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(200px,1fr);gap:0;">
+            <div style="padding:30px;display:flex;flex-direction:column;gap:18px;border-right:1px solid rgba(90,66,32,.25);">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;">
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ember);letter-spacing:.04em;">/sdd-final-review</div>
+                  <h3 style="margin:4px 0 0;font-family:'Cinzel',serif;font-weight:600;font-size:clamp(21px,2.2vw,26px);line-height:1.15;letter-spacing:.01em;color:var(--ink);">The Oracle of the Mountain</h3>
+                  <div style="display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#9a5a2a;background:rgba(200,99,31,.12);border:1px solid rgba(200,99,31,.3);padding:3px 9px;border-radius:20px;">Boss Encounter</div>
+                </div>
+                <span style="flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border:1.5px solid var(--ink);border-radius:50%;color:var(--ink);">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                </span>
+              </div>
+              <p style="margin:0;font-size:16.5px;line-height:1.55;color:var(--ink2);">Full pipeline: QA + Security in parallel, Tech Leader as dispatcher. Saves the artifact and posts the verdict straight to the PR.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:7px;">
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--blood);color:var(--blood);padding:3px 9px;border-radius:3px;">QA</span>
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--royal);color:var(--royal);padding:3px 9px;border-radius:3px;">Security</span>
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--moss);color:var(--moss);padding:3px 9px;border-radius:3px;">Tech Lead</span>
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 9px;border-radius:3px;">GitHub PR</span>
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ember);color:var(--ember);padding:3px 9px;border-radius:3px;">3 Agents</span>
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ember);color:var(--ember);padding:3px 9px;border-radius:3px;">‖ Parallel</span>
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ember);color:var(--ember);padding:3px 9px;border-radius:3px;">∞ Cycles</span>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button onclick="dcModal('sdd-final-review')" class="dc-details" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);border:1px solid rgba(90,66,32,.35);padding:7px 12px;border-radius:3px;">Details →</button>
+                <button onclick="dcCopy(this)" data-copy="/plugin install sdd-final-review@grimoire" class="dc-install" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;background:var(--ink);color:#ece0c6;border-radius:4px;padding:7px 16px;font-family:'Cinzel',serif;font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">
+                  <span style="color:var(--gold);font-size:13px;">↓</span><span data-copylabel="">Install plugin</span>
+                </button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:stretch;">
+              <div style="flex:1;min-height:220px;background:linear-gradient(#e4d6b7,#ddd0a8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#9a8458;border-left:1px solid rgba(90,66,32,.18);">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.5;">Image</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- SKILL CARDS GRID -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;">
+
+          <!-- sdd-qa -->
+          <article style="display:flex;flex-direction:column;border:1.5px solid var(--ink);border-radius:6px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
+            <div style="height:4px;background:var(--blood);"></div>
+            <div class="sprite" style="background:radial-gradient(120% 120% at 50% 0%,rgba(143,58,42,.16),transparent 70%),linear-gradient(#e4d6b7,#ddcaa6);">
+              <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="var(--blood)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+            </div>
+            <div style="padding:24px 22px;display:flex;flex-direction:column;gap:15px;flex:1;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--blood);">/sdd-qa</div>
+                <h3 style="margin:5px 0 12px;font-family:'Cinzel',serif;font-weight:600;font-size:19px;line-height:1.2;color:var(--ink);">Scroll of Quality</h3>
+              </div>
+              <p style="margin:0;font-size:15px;line-height:1.5;color:var(--ink2);flex:1;">Isolated QA analysis: test coverage, SDD compliance, bugs and edge cases. Devin CLI optional.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 8px;border-radius:3px;">Standalone</span>
+                <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 8px;border-radius:3px;">Devin optional</span>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="dcCopy(this)" data-copy="/plugin install sdd-final-review@grimoire" class="dc-install" style="all:unset;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;background:#2c2620;color:#ece0c6;border-radius:4px;padding:10px 12px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;">
+                  <span><span style="color:var(--gold);font-size:14px;">↓</span> Install</span>
+                  <span data-copylabel="" style="font-size:9px;letter-spacing:.08em;color:var(--gold);">Copy curl</span>
+                </button>
+                <button onclick="dcModal('sdd-qa')" class="dc-details" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);border:1px solid rgba(90,66,32,.35);padding:9px 10px;border-radius:4px;white-space:nowrap;">Details</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- sdd-security -->
+          <article style="display:flex;flex-direction:column;border:1.5px solid var(--ink);border-radius:6px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
+            <div style="height:4px;background:var(--royal);"></div>
+            <div class="sprite" style="background:radial-gradient(120% 120% at 50% 0%,rgba(90,74,122,.18),transparent 70%),linear-gradient(#e4d6b7,#ddcaa6);">
+              <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="var(--royal)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3Z"/></svg>
+            </div>
+            <div style="padding:24px 22px;display:flex;flex-direction:column;gap:15px;flex:1;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--royal);">/sdd-security</div>
+                <h3 style="margin:5px 0 12px;font-family:'Cinzel',serif;font-weight:600;font-size:19px;line-height:1.2;color:var(--ink);">The Warlock's Shield</h3>
+              </div>
+              <p style="margin:0;font-size:15px;line-height:1.5;color:var(--ink2);flex:1;">OWASP Top 10, secret scanning, CVEs in dependencies. Devin CLI for a second opinion.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 8px;border-radius:3px;">OWASP</span>
+                <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 8px;border-radius:3px;">Devin optional</span>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="dcCopy(this)" data-copy="/plugin install sdd-final-review@grimoire" class="dc-install" style="all:unset;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;background:#2c2620;color:#ece0c6;border-radius:4px;padding:10px 12px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;">
+                  <span><span style="color:var(--gold);font-size:14px;">↓</span> Install</span>
+                  <span data-copylabel="" style="font-size:9px;letter-spacing:.08em;color:var(--gold);">Copy curl</span>
+                </button>
+                <button onclick="dcModal('sdd-security')" class="dc-details" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);border:1px solid rgba(90,66,32,.35);padding:9px 10px;border-radius:4px;white-space:nowrap;">Details</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- sdd-tech -->
+          <article style="display:flex;flex-direction:column;border:1.5px solid var(--ink);border-radius:6px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
+            <div style="height:4px;background:var(--gold);"></div>
+            <div class="sprite" style="background:radial-gradient(120% 120% at 50% 0%,rgba(217,164,65,.2),transparent 70%),linear-gradient(#e4d6b7,#ddcaa6);">
+              <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="#9a6a1e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"><path d="M3 8l4 4 5-7 5 7 4-4v9H3z"/></svg>
+            </div>
+            <div style="padding:24px 22px;display:flex;flex-direction:column;gap:15px;flex:1;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#9a6a1e;">/sdd-tech</div>
+                <h3 style="margin:5px 0 12px;font-family:'Cinzel',serif;font-weight:600;font-size:19px;line-height:1.2;color:var(--ink);">The Elder's Judgment</h3>
+              </div>
+              <p style="margin:0;font-size:15px;line-height:1.5;color:var(--ink2);flex:1;">Reads ADRs and Learning Lessons, synthesizes reports, issues the final verdict and dispatches the next cycle.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 8px;border-radius:3px;">ADRs</span>
+                <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 8px;border-radius:3px;">Dispatcher</span>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="dcCopy(this)" data-copy="/plugin install sdd-final-review@grimoire" class="dc-install" style="all:unset;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;background:#2c2620;color:#ece0c6;border-radius:4px;padding:10px 12px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;">
+                  <span><span style="color:var(--gold);font-size:14px;">↓</span> Install</span>
+                  <span data-copylabel="" style="font-size:9px;letter-spacing:.08em;color:var(--gold);">Copy curl</span>
+                </button>
+                <button onclick="dcModal('sdd-tech')" class="dc-details" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);border:1px solid rgba(90,66,32,.35);padding:9px 10px;border-radius:4px;white-space:nowrap;">Details</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- adr -->
+          <article style="display:flex;flex-direction:column;border:1.5px solid var(--ink);border-radius:6px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
+            <div style="height:4px;background:var(--moss);"></div>
+            <div class="sprite" style="background:radial-gradient(120% 120% at 50% 0%,rgba(76,107,63,.18),transparent 70%),linear-gradient(#e4d6b7,#ddcaa6);">
+              <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="var(--moss)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </div>
+            <div style="padding:24px 22px;display:flex;flex-direction:column;gap:15px;flex:1;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--moss);">/adr</div>
+                <h3 style="margin:5px 0 12px;font-family:'Cinzel',serif;font-weight:600;font-size:19px;line-height:1.2;color:var(--ink);">The Codex of Decrees</h3>
+              </div>
+              <p style="margin:0;font-size:15px;line-height:1.5;color:var(--ink2);flex:1;">Auto-numbered Architecture Decision Records in docs/adrs/, with CLAUDE.md index kept up to date.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 8px;border-radius:3px;">Authoring</span>
+                <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 8px;border-radius:3px;">CLAUDE.md</span>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="dcCopy(this)" data-copy="/plugin install sdd-create-docs@grimoire" class="dc-install" style="all:unset;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;background:#2c2620;color:#ece0c6;border-radius:4px;padding:10px 12px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;">
+                  <span><span style="color:var(--gold);font-size:14px;">↓</span> Install</span>
+                  <span data-copylabel="" style="font-size:9px;letter-spacing:.08em;color:var(--gold);">Copy curl</span>
+                </button>
+                <button onclick="dcModal('adr')" class="dc-details" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);border:1px solid rgba(90,66,32,.35);padding:9px 10px;border-radius:4px;white-space:nowrap;">Details</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- learning-lesson -->
+          <article style="display:flex;flex-direction:column;border:1.5px solid var(--ink);border-radius:6px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
+            <div style="height:4px;background:var(--amber);"></div>
+            <div class="sprite" style="background:radial-gradient(120% 120% at 50% 0%,rgba(138,109,59,.2),transparent 70%),linear-gradient(#e4d6b7,#ddcaa6);">
+              <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="var(--amber)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z"/></svg>
+            </div>
+            <div style="padding:24px 22px;display:flex;flex-direction:column;gap:15px;flex:1;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--amber);">/learning-lesson</div>
+                <h3 style="margin:5px 0 12px;font-family:'Cinzel',serif;font-weight:600;font-size:19px;line-height:1.2;color:var(--ink);">The Sage's Chronicle</h3>
+              </div>
+              <p style="margin:0;font-size:15px;line-height:1.5;color:var(--ink2);flex:1;">Structured lesson-learned docs in docs/learning-lessons/, indexed in CLAUDE.md for the Tech Leader to read.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 8px;border-radius:3px;">Authoring</span>
+                <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 8px;border-radius:3px;">Insights</span>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="dcCopy(this)" data-copy="/plugin install sdd-create-docs@grimoire" class="dc-install" style="all:unset;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;background:#2c2620;color:#ece0c6;border-radius:4px;padding:10px 12px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;">
+                  <span><span style="color:var(--gold);font-size:14px;">↓</span> Install</span>
+                  <span data-copylabel="" style="font-size:9px;letter-spacing:.08em;color:var(--gold);">Copy curl</span>
+                </button>
+                <button onclick="dcModal('learning-lesson')" class="dc-details" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);border:1px solid rgba(90,66,32,.35);padding:9px 10px;border-radius:4px;white-space:nowrap;">Details</button>
+              </div>
+            </div>
+          </article>
+
+        </div><!-- /grid -->
+      </section>
+
+      <!-- ══ 3. NEXT CHAPTER: AGENT TEAMS ══ -->
+      <section style="border:1.5px dashed rgba(90,66,32,.45);border-radius:6px;overflow:hidden;background:radial-gradient(120% 100% at 0% 0%,rgba(90,74,122,.08),transparent 60%),radial-gradient(100% 100% at 100% 100%,rgba(200,99,31,.06),transparent 60%);">
+        <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(180px,1fr);gap:0;">
+          <div style="padding:28px 32px;display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#9a7848;background:rgba(90,74,122,.12);border:1px solid rgba(90,74,122,.35);padding:3px 10px;border-radius:20px;">Coming Next</div>
+              <span style="flex:1;height:1px;background:linear-gradient(90deg,rgba(90,66,32,.3),transparent);"></span>
+            </div>
+            <h2 style="margin:0;font-family:'Cinzel',serif;font-weight:700;font-size:clamp(18px,2vw,22px);letter-spacing:.02em;color:var(--ink);">The Next Dungeon — Agent Teams</h2>
+            <p style="font-size:16px;line-height:1.65;color:var(--ink2);margin:0;">
+              The current pipeline runs on <strong>sub-agents</strong>: a single orchestrator spawns QA, Security, and Tech Leader, and waits for each in turn. A new architecture is being mapped —
+              <strong style="color:var(--royal);">Agent Teams</strong>, Claude's peer-autonomy model, where each reviewer operates as an independent agent, coordinating without a central dispatcher.
+            </p>
+            <p style="font-size:15px;line-height:1.6;color:#7a6040;margin:0;">
+              In an Agent Teams model, QA, Security, and Tech Leader would each hold their own context and communicate as peers — enabling longer, deeper reviews without a single session growing unbounded. Implementation in progress.
+            </p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+              <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--royal);color:var(--royal);padding:3px 9px;border-radius:3px;">Peer autonomy</span>
+              <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 9px;border-radius:3px;">Distributed context</span>
+              <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 9px;border-radius:3px;">No central orchestrator</span>
+              <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--amber);color:var(--amber);padding:3px 9px;border-radius:3px;">Under development</span>
+            </div>
+          </div>
+          <div style="min-height:220px;background:linear-gradient(#e4d6b7,#ddd0a8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#9a8458;border-left:1px dashed rgba(90,66,32,.3);">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.5;">Image</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ FOOTER ══ -->
+      <footer style="text-align:center;border-top:1px solid rgba(90,66,32,.3);padding-top:28px;">
+        <div style="color:var(--ember);font-size:16px;margin-bottom:10px;">◆ ◆ ◆</div>
+        <p style="margin:0 0 24px;font-style:italic;font-size:17px;color:var(--ink2);">"The adventure continues at §1 — or until the Tech Leader approves the PR."</p>
+        <!-- Easter egg: tiny die -->
+        <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px;opacity:.45;transition:opacity .2s;" onmouseenter="this.style.opacity='.9'" onmouseleave="this.style.opacity='.45'">
+          <span id="edie" onclick="dcEasterDie()" title="Roll for luck" style="font-size:28px;cursor:pointer;display:inline-block;line-height:1;user-select:none;">⚄</span>
+          <span id="ediemsg" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);min-height:1em;"></span>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+
+  <p style="text-align:center;margin:24px 0 4px;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#6f5c3e;">Hosted in the dungeons of GitHub Pages</p>
+</div>
+</div><!-- /page -->
+
+<script>
+// ── Copy ──
+function dcCopy(btn){
+  var text=btn.getAttribute('data-copy')||'';
+  try{navigator.clipboard&&navigator.clipboard.writeText(text);}catch(e){}
+  var lbl=btn.querySelector('[data-copylabel]');
+  if(lbl&&!lbl.dataset.busy){var o=lbl.textContent;lbl.dataset.busy='1';lbl.textContent='Copied!';setTimeout(function(){lbl.textContent=o;delete lbl.dataset.busy;},1400);}
+}
+
+// ── Easter die ──
+var EFACES=['⚀','⚁','⚂','⚃','⚄','⚅'];
+var EQUOTES=['1 — the Warlock grins. Run /sdd-security.','2 — fate stirs. Another cycle awaits.','3 — the Elder deliberates. NEEDS WORK.','4 — your blade holds. Coverage rises.','5 — fortune smiles. PR review incoming.','6 — APPROVED. The treasure is yours.'];
+function dcEasterDie(){
+  var n=Math.floor(Math.random()*6);
+  document.getElementById('edie').textContent=EFACES[n];
+  document.getElementById('ediemsg').textContent=EQUOTES[n];
+}
+
+// ── Modal data ──
+var SKILLS={
+  'sdd-final-review':{
+    cmd:'/sdd-final-review:final-review [spec-id]',color:'#c8631f',title:'The Oracle of the Mountain',plugin:'sdd-final-review',
+    img:null,
+    tagline:'Full multi-agent review pipeline — the boss encounter of the SDD workflow.',
+    description:'Orchestrates QA Engineer and Security Engineer sub-agents in parallel, then runs the Tech Leader sequentially once both reports are ready. Saves a versioned cycle artifact and posts the verdict to the open GitHub PR.',
+    steps:['Reads <code>$ARGUMENTS</code> as the spec-id (defaults to the sanitized current branch name).','Spawns <strong>QA Engineer</strong> and <strong>Security Engineer</strong> as parallel sub-agents — they explore the codebase independently.','Waits for both reports, then spawns the <strong>Tech Leader</strong> sequentially — reads every ADR in <code>docs/adrs/</code> and every lesson in <code>docs/learning-lessons/</code>.','Tech Leader issues a verdict and dispatches targeted agents for the next cycle (e.g. "QA only — verify coverage").','Saves the full report to <code>reports/sdd-final-review/&lt;spec-id&gt;/cycle-N-YYYYMMDD-HHmm.md</code>.','Posts verdict to the open PR via the GitHub plugin (optional, prompts user).','Main Claude Code session applies the required fixes. Cycle repeats until <strong>APPROVED</strong>.'],
+    verdicts:[{badge:'APPROVED',color:'#4c6b3f',text:'All critical/high issues resolved. Production-ready. No next cycle.'},{badge:'NEEDS WORK',color:'#8a6d3b',text:'Targeted issues remain. Only the named agents are re-run to save tokens.'},{badge:'BLOCKED',color:'#8f3a2a',text:'Critical security or architectural flaw. Full cycle required after rework.'}],
+    output:'reports/sdd-final-review/&lt;spec-id&gt;/cycle-N-YYYYMMDD-HHmm.md',
+    install:'/plugin install sdd-final-review@grimoire',
+    tags:[{l:'3 Agents',c:'#8f3a2a'},{l:'Parallel + Sequential',c:'#5a4a7a'},{l:'GitHub PR',c:'#4c6b3f'},{l:'Versioned reports',c:'#62553f'}]
+  },
+  'sdd-qa':{
+    cmd:'/sdd-final-review:qa [context]',color:'#8f3a2a',title:'Scroll of Quality',plugin:'sdd-final-review',
+    img:null,
+    tagline:'Standalone QA Engineer — can run independently or be called by the pipeline.',
+    description:'Acts as a senior QA Engineer. Performs a thorough quality analysis of the current implementation: test coverage, SDD compliance, bug identification, and edge cases. Optionally requests a second opinion from Devin CLI.',
+    steps:['Runs <code>git diff --name-only HEAD~1</code> to identify changed files.','Locates test files (<code>*.test.*</code>, <code>*.spec.*</code>, <code>__tests__/</code>) and measures coverage.','Checks SDD compliance: does the implementation match the spec? Are edge cases handled?','Identifies bugs, missing validations, and untested branches.','If <code>devin</code> is installed, optionally requests a second opinion and synthesizes it — never just relays it.','Returns a structured report with findings: <code>severity | description | file:line</code>.','Issues sub-agent verdict: <strong>PASS</strong> or <strong>FAIL</strong>.'],
+    verdicts:[{badge:'PASS',color:'#4c6b3f',text:'No critical or high-severity QA issues found.'},{badge:'FAIL',color:'#8f3a2a',text:'Critical or high issues found. Lists each with file:line and severity.'}],
+    output:'Structured Markdown report (table: severity | description | file:line)',
+    install:'/plugin install sdd-final-review@grimoire',
+    tags:[{l:'Standalone',c:'#8f3a2a'},{l:'Test coverage',c:'#62553f'},{l:'Devin optional',c:'#5a4a7a'}]
+  },
+  'sdd-security':{
+    cmd:'/sdd-final-review:security [context]',color:'#5a4a7a',title:"The Warlock's Shield",plugin:'sdd-final-review',
+    img:null,
+    tagline:'Standalone Security Engineer — OWASP, secrets, CVEs, auth/authz analysis.',
+    description:'Acts as a senior Security Engineer. Performs a deep security analysis covering the OWASP Top 10, secret scanning, dependency CVEs, and authentication/authorization logic. Optionally uses Devin CLI as an external provider.',
+    steps:['Scans changed files for OWASP Top 10 vulnerabilities: injection, XSS, IDOR, broken auth, etc.','Searches for hardcoded secrets, tokens, passwords, and private keys in the diff.','Checks package manifests for known CVEs (<code>package.json</code>, <code>requirements.txt</code>, <code>go.mod</code>…).','Reviews auth and authorization logic for missing guards or privilege escalation paths.','If <code>devin</code> is installed, optionally invokes it and synthesizes the output.','Returns a structured report: <code>severity | finding | file:line</code>.','Issues sub-agent verdict: <strong>PASS</strong> or <strong>FAIL</strong>.'],
+    verdicts:[{badge:'PASS',color:'#4c6b3f',text:'No critical or high-severity security findings.'},{badge:'FAIL',color:'#8f3a2a',text:'Critical or high findings. Lists each with OWASP category and file:line.'}],
+    output:'Structured Markdown report (table: severity | finding | file:line)',
+    install:'/plugin install sdd-final-review@grimoire',
+    tags:[{l:'OWASP Top 10',c:'#5a4a7a'},{l:'Secret scan',c:'#8f3a2a'},{l:'CVEs',c:'#62553f'},{l:'Devin optional',c:'#4c6b3f'}]
+  },
+  'sdd-tech':{
+    cmd:'/sdd-final-review:tech [qa-report] [security-report]',color:'#9a6a1e',title:"The Elder's Judgment",plugin:'sdd-final-review',
+    img:null,
+    tagline:'Tech Leader — sequential, reads all context, issues the final verdict and dispatches.',
+    description:'Acts as a senior Tech Leader. Loads ADRs, Learning Lessons, and both QA + Security reports, then synthesizes them into a final verdict with targeted dispatch instructions for the next cycle.',
+    steps:['Loads the QA report (from argument or previous <code>/sdd-qa</code> run).','Loads the Security report (from argument or previous <code>/sdd-security</code> run).','Reads ALL <code>.md</code> files from <code>docs/adrs/</code> — lists each ADR title explicitly.','Reads ALL <code>.md</code> files from <code>docs/learning-lessons/</code> — lists each lesson title.','Cross-references the implementation against every ADR for compliance violations.','Checks whether past learning lessons were applied or patterns were repeated.','Issues a verdict and, on NEEDS WORK, names <em>only</em> the agents needed next to save tokens.','Optionally posts the verdict to the open GitHub PR (asks user for confirmation).'],
+    verdicts:[{badge:'APPROVED',color:'#4c6b3f',text:'All critical/high issues resolved. Production-ready.'},{badge:'NEEDS WORK',color:'#8a6d3b',text:'Targeted dispatch: names only the agents needed (e.g. "QA only").'},{badge:'BLOCKED',color:'#8f3a2a',text:'Critical issue — full cycle required after significant rework.'}],
+    output:'Verdict report + dispatch instructions + optional GitHub PR review',
+    install:'/plugin install sdd-final-review@grimoire',
+    tags:[{l:'ADR compliance',c:'#4c6b3f'},{l:'Lesson check',c:'#8a6d3b'},{l:'Dispatcher',c:'#5a4a7a'},{l:'GitHub PR',c:'#62553f'}]
+  },
+  'adr':{
+    cmd:'/sdd-create-docs:adr [title and context]',color:'#4c6b3f',title:'The Codex of Decrees',plugin:'sdd-create-docs',
+    img:null,
+    tagline:'Creates Architecture Decision Records, auto-numbered and indexed in CLAUDE.md.',
+    description:'Records a technical or architectural decision as an ADR file. Auto-detects the next ADR number, creates the file in <code>docs/adrs/</code>, and keeps the CLAUDE.md index up to date. The Tech Leader reads every ADR during each review cycle.',
+    steps:['Detects the highest existing ADR number in <code>docs/adrs/</code> and increments it (e.g. <code>ADR-014</code>). Creates the folder if absent.','Extracts title, context, and decision from your message. Asks iteratively only for missing required fields.','Generates <code>docs/adrs/ADR-NNN-title-in-kebab-case.md</code> with sections: Status, Context, Decision, Alternatives, Consequences, References.','Omits optional sections if no content was provided — never invents content.','Appends a new row to the ADR table in <code>CLAUDE.md</code> (creates the section if absent).','Reports the created file path, CLAUDE.md update, and current ADR status.'],
+    verdicts:[],
+    output:'docs/adrs/ADR-NNN-title-in-kebab-case.md  +  CLAUDE.md index row',
+    install:'/plugin install sdd-create-docs@grimoire',
+    tags:[{l:'Auto-numbered',c:'#4c6b3f'},{l:'docs/adrs/',c:'#62553f'},{l:'CLAUDE.md index',c:'#8a6d3b'}]
+  },
+  'learning-lesson':{
+    cmd:'/sdd-create-docs:learning-lesson [title and context]',color:'#8a6d3b',title:"The Sage's Chronicle",plugin:'sdd-create-docs',
+    img:null,
+    tagline:'Captures lessons learned as structured docs, indexed in CLAUDE.md.',
+    description:'Documents a technical discovery, insight, or lesson learned from development work. Creates a structured file in <code>docs/learning-lessons/</code> and keeps the CLAUDE.md index updated. The Tech Leader reads every lesson during review to check if past insights were applied.',
+    steps:['Extracts title and context (where/when discovered) from your message. Asks only for missing required fields.','Creates <code>docs/learning-lessons/title_in_snake_case.md</code> (creates the folder if needed).','Generates structured content: Mental Model, API/code reference, practical examples from the project, relation to ADRs.','Omits any section for which no content was provided — never invents content.','Appends a new entry to the Learning Lessons list in <code>CLAUDE.md</code> (creates the section if absent).','Reports the created file path and CLAUDE.md update.'],
+    verdicts:[],
+    output:'docs/learning-lessons/title_in_snake_case.md  +  CLAUDE.md index entry',
+    install:'/plugin install sdd-create-docs@grimoire',
+    tags:[{l:'docs/learning-lessons/',c:'#8a6d3b'},{l:'CLAUDE.md index',c:'#4c6b3f'},{l:'Insights',c:'#62553f'}]
+  }
+};
+
+var modal=document.getElementById('modal');
+var modalContent=document.getElementById('modal-content');
+
+function dcModal(id){
+  var s=SKILLS[id]; if(!s) return;
+
+  // image area: placeholder div or actual <img>
+  var imgHtml=s.img
+    ?'<img src="'+s.img+'" class="m-img" alt="'+s.title+'" />'
+    :'<div class="m-img"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Image — set <code style="font-size:10px;">img</code> in SKILLS data</span></div>';
+
+  var verdictsHtml='';
+  if(s.verdicts.length){
+    verdictsHtml='<div class="m-sec"><div class="m-sec-title">Verdicts</div>'+
+      s.verdicts.map(function(v){return'<div class="m-verdict"><span class="m-vbadge" style="background:'+v.color+';">'+v.badge+'</span><span class="m-vtext">'+v.text+'</span></div>';}).join('')+'</div>';
+  }
+
+  modalContent.innerHTML=
+    '<div class="m-hd" style="border-top:4px solid '+s.color+';">'+
+      '<div class="m-cmd" style="color:'+s.color+';">'+s.cmd+'</div>'+
+      '<div id="modal-title" class="m-title">'+s.title+'</div>'+
+      '<div class="m-plugin">Plugin: '+s.plugin+'</div>'+
+      '<p class="m-tagline">'+s.tagline+'</p>'+
+    '</div>'+
+    '<div class="m-body">'+
+      imgHtml+
+      '<div class="m-sec"><div class="m-sec-title">Description</div><p class="m-p">'+s.description+'</p></div>'+
+      '<div class="m-sec"><div class="m-sec-title">How it works</div>'+
+        s.steps.map(function(st,i){return'<div class="m-step"><div class="m-n">'+(i+1)+'</div><div class="m-step-txt">'+st+'</div></div>';}).join('')+
+      '</div>'+
+      verdictsHtml+
+      '<div class="m-sec"><div class="m-sec-title">Output</div><code class="m-code">'+s.output+'</code></div>'+
+      '<div class="m-sec"><div class="m-sec-title">Tags</div><div class="m-tags">'+
+        s.tags.map(function(t){return'<span class="m-tag" style="border-color:'+t.c+';color:'+t.c+';">'+t.l+'</span>';}).join('')+
+      '</div></div>'+
+      '<div class="m-sec" style="text-align:center;">'+
+        '<button onclick="dcCopyInstall(\''+id+'\')" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;background:#2c2620;color:#ece0c6;border-radius:5px;padding:12px 22px;font-family:\'Cinzel\',serif;font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;">'+
+          '<span style="color:#d9a441;font-size:15px;">↓</span> <span id="mcopy-lbl">Copy install command</span>'+
+        '</button>'+
+        '<p style="margin-top:10px;font-family:\'Cinzel\',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9a8458;">Paste in your terminal, then restart Claude Code and type <code style="font-size:11px;font-family:\'JetBrains Mono\',monospace;">/'+id+'</code></p>'+
+      '</div>'+
+    '</div>';
+
+  modal.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function dcCopyInstall(id){
+  var s=SKILLS[id]; if(!s) return;
+  try{navigator.clipboard&&navigator.clipboard.writeText(s.install);}catch(e){}
+  var lbl=document.getElementById('mcopy-lbl');
+  if(lbl&&!lbl.dataset.busy){var o=lbl.textContent;lbl.dataset.busy='1';lbl.textContent='Copied!';setTimeout(function(){lbl.textContent=o;delete lbl.dataset.busy;},1400);}
+}
+
+function dcCloseModal(){modal.classList.remove('open');document.body.style.overflow='';}
+modal.addEventListener('click',function(e){if(e.target===modal)dcCloseModal();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')dcCloseModal();});
+</script>
+</body>
+</html>

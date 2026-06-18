@@ -1,0 +1,13 @@
+{
+  "name": "sdd-create-docs",
+  "description": "SDD authoring tools: create auto-numbered Architecture Decision Records and structured Learning Lessons. Both are indexed in CLAUDE.md and read by the Tech Leader during review cycles.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Rafael Ventura",
+    "email": "r.c_ventura@hotmail.com"
+  },
+  "homepage": "https://rc-ventura.github.io/grimoire-claude-code",
+  "repository": "https://github.com/rc-ventura/grimoire-claude-code",
+  "license": "MIT",
+  "keywords": ["sdd", "adr", "docs", "learning-lessons", "documentation"]
+}

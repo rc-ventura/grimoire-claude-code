@@ -1,0 +1,18 @@
+{
+  "sdd-final-review": {
+    "version": "0.2.0",
+    "commands": [
+      "sdd-final-review.md",
+      "sdd-qa.md",
+      "sdd-security.md",
+      "sdd-tech.md"
+    ]
+  },
+  "sdd-docs": {
+    "version": "0.1.0",
+    "commands": [
+      "adr.md",
+      "learning-lesson.md"
+    ]
+  }
+}
