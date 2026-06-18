@@ -1,6 +1,6 @@
 # Firetop Mountain Plugin Registry
 
-![The Warlock of Firetop Mountain](docs/assets/warlock-center.jpg)
+<img src="docs/assets/warlock-center.jpg" alt="The Warlock of Firetop Mountain" width="100%" height="300px" style="object-fit:cover;object-position:center top">
 
 > A [Claude Code](https://claude.com/claude-code) plugin marketplace themed after the Fighting Fantasy gamebook *The Warlock of Firetop Mountain*.
 
