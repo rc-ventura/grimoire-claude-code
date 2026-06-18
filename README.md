@@ -1,83 +1,106 @@
-# 🐉 Firetop Mountain Plugin Registry
+# Firetop Mountain Plugin Registry
 
-> A private [Claude Code](https://claude.com/claude-code) plugin marketplace, themed after the Fighting Fantasy gamebook *The Warlock of Firetop Mountain*.
+> A [Claude Code](https://claude.com/claude-code) plugin marketplace themed after the Fighting Fantasy gamebook *The Warlock of Firetop Mountain*.
 
-Hosts skills, commands, and plugins that extend the **SDD (Software-Driven Development)** workflow with multi-agent review pipelines.
+Distributes the **SDD (Software-Driven Development)** multi-agent review pipeline as native Claude Code plugins.
 
-## Flagship plugin: `sdd-final-review`
+**Marketplace site:** [rc-ventura.github.io/grimoire-claude-code](https://rc-ventura.github.io/grimoire-claude-code)
 
-A multi-agent code-review pipeline that replaces the manual loop of switching to an external CLI after each implementation:
+---
+
+## Install via native Claude Code marketplace
 
 ```
-Claude Code implements
-        ↓
-/sdd-final-review [spec-id]
-        ↓
-QA Engineer  ⇄  Security Engineer      (parallel — Claude sub-agents)
-        └────────┬────────┘
-                 ↓
-          Tech Leader                  (sequential — needs both reports)
-   reads ADRs + Learning Lessons + both reports
-                 ↓
-   APPROVED / NEEDS WORK / BLOCKED  + next-cycle dispatch
-                 ↓
-   Claude Code (main session) adjusts code → repeat until APPROVED
+/plugin marketplace add rc-ventura/grimoire-claude-code
+/plugin install sdd-final-review@grimoire
+/plugin install sdd-create-docs@grimoire
 ```
 
-Each run saves a versioned artifact to `reports/sdd-final-review/<spec-id>/cycle-<N>-<timestamp>.md` and, if a PR exists for the branch, posts the verdict via the GitHub plugin.
+## Plugins
 
-### Commands
+### `sdd-final-review`
+
+Multi-agent code review pipeline. QA Engineer and Security Engineer run in parallel, then the Tech Leader synthesizes both reports and issues the final verdict.
 
 | Command | Role |
 |---|---|
-| `/sdd-final-review [spec-id]` | Full pipeline orchestrator (QA + Security → Tech Leader) |
-| `/sdd-qa` | Standalone QA review — coverage, bugs, SDD compliance, edge cases |
-| `/sdd-security` | Standalone Security review — OWASP Top 10, secrets, dependency CVEs |
-| `/sdd-tech` | Standalone Tech Leader — ADR/Lessons compliance, verdict + dispatch |
+| `/sdd-final-review:final-review [spec-id]` | Full pipeline orchestrator |
+| `/sdd-final-review:qa [context]` | Standalone QA — coverage, bugs, SDD compliance |
+| `/sdd-final-review:security [context]` | Standalone Security — OWASP, secrets, CVEs |
+| `/sdd-final-review:tech [qa] [security]` | Tech Leader — ADR/Lessons compliance, verdict + dispatch |
 
-## Install
+Pipeline shape:
 
-```bash
-# install / update / remove a plugin
-bash install.sh sdd-final-review
-bash install.sh sdd-final-review update
-bash install.sh sdd-final-review remove
-bash install.sh --list
-
-# or bootstrap remotely
-curl -fsSL https://raw.githubusercontent.com/rc-ventura/grimoire-claude-code/main/install.sh | bash -s sdd-final-review
+```
+/sdd-final-review:final-review
+        ↓
+QA Engineer  ⇄  Security Engineer    (parallel sub-agents)
+        └────────┬────────┘
+                 ↓
+          Tech Leader                (sequential — needs both reports)
+   reads ADRs + Learning Lessons
+                 ↓
+   APPROVED / NEEDS WORK / BLOCKED
+                 ↓
+   Claude Code applies fixes → repeat until APPROVED
 ```
 
-The installer reads [`commands/manifest.json`](commands/manifest.json) to learn which
-command `.md` files belong to a plugin and copies them into `~/.claude/commands/`.
-Restart Claude Code afterwards to pick up the new slash commands.
+Saves versioned artifacts to `reports/sdd-final-review/<spec-id>/cycle-<N>-<timestamp>.md`.
 
-> **Configure the source repo** by editing the `OWNER`/`REPO`/`BRANCH` defaults at the
-> top of `install.sh`, or by overriding them per run:
-> `SDD_OWNER=… SDD_REPO=… SDD_BRANCH=… bash install.sh sdd-final-review`.
+---
+
+### `sdd-create-docs`
+
+SDD authoring tools for Architecture Decision Records and Learning Lessons. Both are auto-numbered, indexed in `CLAUDE.md`, and read by the Tech Leader on every review cycle.
+
+| Command | Role |
+|---|---|
+| `/sdd-create-docs:adr [title and context]` | Create auto-numbered ADR in `docs/adrs/` |
+| `/sdd-create-docs:learning-lesson [title and context]` | Create structured lesson in `docs/learning-lessons/` |
+
+---
+
+## Fallback install (curl)
+
+For environments without native marketplace access:
+
+```bash
+bash install.sh sdd-final-review
+bash install.sh sdd-create-docs
+
+# or remotely
+curl -fsSL https://raw.githubusercontent.com/rc-ventura/grimoire-claude-code/main/install.sh | bash -s sdd-final-review
+```
 
 ## Requirements
 
 | Requirement | Purpose | Status |
 |---|---|---|
 | Claude Code CLI | Run the commands | Required |
-| `curl` + `python3` | Run `install.sh` | Required |
-| `github@claude-plugins-official` | Post PR reviews | Recommended |
+| `github@claude-plugins-official` | Post PR verdicts | Recommended |
+| `docs/adrs/` in your project | Tech Leader ADR compliance | Recommended |
+| `docs/learning-lessons/` in your project | Tech Leader lesson check | Recommended |
 | `devin` CLI | External second opinion (QA/Security) | Optional |
-| `docs/adrs/`, `docs/learning_lessons/` in your project | Tech Leader context | Recommended |
 
 ## Repository layout
 
 ```
-commands/        # the four sdd-*.md command files + manifest.json
-plugins/         # sdd-final-review.plugin (Cowork bundle)
-docs/            # index.html (GitHub Pages marketplace) + sdd-plugin-spec.md
-reports/         # generated review artifacts (created at runtime)
-registry.json    # plugin metadata index
-install.sh       # list / install / update / remove
+.claude-plugin/
+  marketplace.json      # native marketplace catalog
+plugins/
+  sdd-final-review/
+    .claude-plugin/plugin.json
+    commands/           # final-review.md, qa.md, security.md, tech.md
+  sdd-create-docs/
+    .claude-plugin/plugin.json
+    commands/           # adr.md, learning-lesson.md
+commands/               # fallback copies + manifest.json for install.sh
+pages/                  # index.html — GitHub Pages marketplace site
+registry.json           # display metadata for marketplace page
+install.sh              # fallback: list / install / update / remove
 ```
 
-Full design and rationale: [`docs/sdd-plugin-spec.md`](docs/sdd-plugin-spec.md).
+Full design and rationale: [`pages/sdd-plugin-spec.md`](pages/sdd-plugin-spec.md)
 
 ---
 
