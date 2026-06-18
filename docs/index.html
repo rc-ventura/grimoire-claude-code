@@ -212,10 +212,7 @@
               </div>
             </div>
             <div style="display:flex;align-items:stretch;">
-              <div style="flex:1;min-height:220px;background:linear-gradient(#e4d6b7,#ddd0a8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#9a8458;border-left:1px solid rgba(90,66,32,.18);">
-                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.5;">Image</span>
-              </div>
+              <img src="assets/oracle_mountain.png" alt="The Oracle of the Mountain" style="flex:1;min-height:220px;width:100%;object-fit:cover;object-position:center top;border-left:1px solid rgba(90,66,32,.18);">
             </div>
           </div>
         </article>
@@ -379,10 +376,7 @@
               <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--amber);color:var(--amber);padding:3px 9px;border-radius:3px;">Under development</span>
             </div>
           </div>
-          <div style="min-height:220px;background:linear-gradient(#e4d6b7,#ddd0a8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#9a8458;border-left:1px dashed rgba(90,66,32,.3);">
-            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-            <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.5;">Image</span>
-          </div>
+          <img src="assets/elder_judgment.png" alt="The Next Dungeon — Agent Teams" style="min-height:220px;width:100%;object-fit:cover;object-position:center top;border-left:1px dashed rgba(90,66,32,.3);">
         </div>
       </section>
 
@@ -426,7 +420,7 @@ function dcEasterDie(){
 var SKILLS={
   'sdd-final-review':{
     cmd:'/sdd-final-review:final-review [spec-id]',color:'#c8631f',title:'The Oracle of the Mountain',plugin:'sdd-final-review',
-    img:null,
+    img:'assets/oracle_mountain.png',
     tagline:'Full multi-agent review pipeline — the boss encounter of the SDD workflow.',
     description:'Orchestrates QA Engineer and Security Engineer sub-agents in parallel, then runs the Tech Leader sequentially once both reports are ready. Saves a versioned cycle artifact and posts the verdict to the open GitHub PR.',
     steps:['Reads <code>$ARGUMENTS</code> as the spec-id (defaults to the sanitized current branch name).','Spawns <strong>QA Engineer</strong> and <strong>Security Engineer</strong> as parallel sub-agents — they explore the codebase independently.','Waits for both reports, then spawns the <strong>Tech Leader</strong> sequentially — reads every ADR in <code>docs/adrs/</code> and every lesson in <code>docs/learning-lessons/</code>.','Tech Leader issues a verdict and dispatches targeted agents for the next cycle (e.g. "QA only — verify coverage").','Saves the full report to <code>reports/sdd-final-review/&lt;spec-id&gt;/cycle-N-YYYYMMDD-HHmm.md</code>.','Posts verdict to the open PR via the GitHub plugin (optional, prompts user).','Main Claude Code session applies the required fixes. Cycle repeats until <strong>APPROVED</strong>.'],
@@ -437,7 +431,7 @@ var SKILLS={
   },
   'sdd-qa':{
     cmd:'/sdd-final-review:qa [context]',color:'#8f3a2a',title:'Scroll of Quality',plugin:'sdd-final-review',
-    img:null,
+    img:'assets/scroll_quality.png',
     tagline:'Standalone QA Engineer — can run independently or be called by the pipeline.',
     description:'Acts as a senior QA Engineer. Performs a thorough quality analysis of the current implementation: test coverage, SDD compliance, bug identification, and edge cases. Optionally requests a second opinion from Devin CLI.',
     steps:['Runs <code>git diff --name-only HEAD~1</code> to identify changed files.','Locates test files (<code>*.test.*</code>, <code>*.spec.*</code>, <code>__tests__/</code>) and measures coverage.','Checks SDD compliance: does the implementation match the spec? Are edge cases handled?','Identifies bugs, missing validations, and untested branches.','If <code>devin</code> is installed, optionally requests a second opinion and synthesizes it — never just relays it.','Returns a structured report with findings: <code>severity | description | file:line</code>.','Issues sub-agent verdict: <strong>PASS</strong> or <strong>FAIL</strong>.'],
@@ -448,7 +442,7 @@ var SKILLS={
   },
   'sdd-security':{
     cmd:'/sdd-final-review:security [context]',color:'#5a4a7a',title:"The Warlock's Shield",plugin:'sdd-final-review',
-    img:null,
+    img:'assets/warlock_shield.png',
     tagline:'Standalone Security Engineer — OWASP, secrets, CVEs, auth/authz analysis.',
     description:'Acts as a senior Security Engineer. Performs a deep security analysis covering the OWASP Top 10, secret scanning, dependency CVEs, and authentication/authorization logic. Optionally uses Devin CLI as an external provider.',
     steps:['Scans changed files for OWASP Top 10 vulnerabilities: injection, XSS, IDOR, broken auth, etc.','Searches for hardcoded secrets, tokens, passwords, and private keys in the diff.','Checks package manifests for known CVEs (<code>package.json</code>, <code>requirements.txt</code>, <code>go.mod</code>…).','Reviews auth and authorization logic for missing guards or privilege escalation paths.','If <code>devin</code> is installed, optionally invokes it and synthesizes the output.','Returns a structured report: <code>severity | finding | file:line</code>.','Issues sub-agent verdict: <strong>PASS</strong> or <strong>FAIL</strong>.'],
@@ -459,7 +453,7 @@ var SKILLS={
   },
   'sdd-tech':{
     cmd:'/sdd-final-review:tech [qa-report] [security-report]',color:'#9a6a1e',title:"The Elder's Judgment",plugin:'sdd-final-review',
-    img:null,
+    img:'assets/elder_judgment.png',
     tagline:'Tech Leader — sequential, reads all context, issues the final verdict and dispatches.',
     description:'Acts as a senior Tech Leader. Loads ADRs, Learning Lessons, and both QA + Security reports, then synthesizes them into a final verdict with targeted dispatch instructions for the next cycle.',
     steps:['Loads the QA report (from argument or previous <code>/sdd-qa</code> run).','Loads the Security report (from argument or previous <code>/sdd-security</code> run).','Reads ALL <code>.md</code> files from <code>docs/adrs/</code> — lists each ADR title explicitly.','Reads ALL <code>.md</code> files from <code>docs/learning-lessons/</code> — lists each lesson title.','Cross-references the implementation against every ADR for compliance violations.','Checks whether past learning lessons were applied or patterns were repeated.','Issues a verdict and, on NEEDS WORK, names <em>only</em> the agents needed next to save tokens.','Optionally posts the verdict to the open GitHub PR (asks user for confirmation).'],
@@ -470,7 +464,7 @@ var SKILLS={
   },
   'adr':{
     cmd:'/sdd-create-docs:adr [title and context]',color:'#4c6b3f',title:'The Codex of Decrees',plugin:'sdd-create-docs',
-    img:null,
+    img:'assets/codex_decrees.png',
     tagline:'Creates Architecture Decision Records, auto-numbered and indexed in CLAUDE.md.',
     description:'Records a technical or architectural decision as an ADR file. Auto-detects the next ADR number, creates the file in <code>docs/adrs/</code>, and keeps the CLAUDE.md index up to date. The Tech Leader reads every ADR during each review cycle.',
     steps:['Detects the highest existing ADR number in <code>docs/adrs/</code> and increments it (e.g. <code>ADR-014</code>). Creates the folder if absent.','Extracts title, context, and decision from your message. Asks iteratively only for missing required fields.','Generates <code>docs/adrs/ADR-NNN-title-in-kebab-case.md</code> with sections: Status, Context, Decision, Alternatives, Consequences, References.','Omits optional sections if no content was provided — never invents content.','Appends a new row to the ADR table in <code>CLAUDE.md</code> (creates the section if absent).','Reports the created file path, CLAUDE.md update, and current ADR status.'],
@@ -481,7 +475,7 @@ var SKILLS={
   },
   'learning-lesson':{
     cmd:'/sdd-create-docs:learning-lesson [title and context]',color:'#8a6d3b',title:"The Sage's Chronicle",plugin:'sdd-create-docs',
-    img:null,
+    img:'assets/saga_chronicle.png',
     tagline:'Captures lessons learned as structured docs, indexed in CLAUDE.md.',
     description:'Documents a technical discovery, insight, or lesson learned from development work. Creates a structured file in <code>docs/learning-lessons/</code> and keeps the CLAUDE.md index updated. The Tech Leader reads every lesson during review to check if past insights were applied.',
     steps:['Extracts title and context (where/when discovered) from your message. Asks only for missing required fields.','Creates <code>docs/learning-lessons/title_in_snake_case.md</code> (creates the folder if needed).','Generates structured content: Mental Model, API/code reference, practical examples from the project, relation to ADRs.','Omits any section for which no content was provided — never invents content.','Appends a new entry to the Learning Lessons list in <code>CLAUDE.md</code> (creates the section if absent).','Reports the created file path and CLAUDE.md update.'],
