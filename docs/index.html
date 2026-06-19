@@ -42,8 +42,6 @@
   .m-title{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(20px,2.4vw,26px);letter-spacing:.01em;line-height:1.15;margin:6px 0 4px}
   .m-plugin{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#9a7848;margin-bottom:8px}
   .m-tagline{font-style:italic;font-size:16px;line-height:1.5;color:#6a5030}
-  .m-img{width:70%;height:auto;border-radius:4px;margin:20px auto;display:block;}
-  .m-img-placeholder{width:100%;height:180px;border-radius:4px;border:1.5px dashed rgba(90,66,32,.4);background:linear-gradient(#e4d6b7,#ddd0a8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin:20px 0;color:#9a8458;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;overflow:hidden}
   .m-sec{margin-top:20px}
   .m-sec-title{font-family:'Cinzel',serif;font-weight:600;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:#9a7848;border-bottom:1px solid rgba(90,66,32,.22);padding-bottom:4px;margin-bottom:10px}
   .m-p{font-size:16px;line-height:1.6;color:#4a3820}
@@ -56,6 +54,10 @@
   .m-vbadge{flex-shrink:0;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:3px;margin-top:2px;color:#ece0c6}
   .m-vtext{font-size:15px;line-height:1.5;color:#4a3820}
   .m-code{display:block;background:#2c2620;color:#ece0c6;font-family:'JetBrains Mono',monospace;font-size:12px;padding:10px 14px;border-radius:4px;margin-top:8px;white-space:pre-wrap;word-break:break-all}
+  .m-cmd-block{display:flex;align-items:center;gap:10px;background:#2c2620;border-radius:4px;padding:10px 14px;margin-bottom:14px;border:1px solid #3e3428;}
+  .m-cmd-code{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#ece0c6;flex:1;word-break:break-all;}
+  .m-copy-btn{all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#d9a441;white-space:nowrap;padding:4px 9px;border:1px solid rgba(217,164,65,.35);border-radius:3px;transition:background .15s;}
+  .m-copy-btn:hover{background:rgba(217,164,65,.12);}
 </style>
 </head>
 <body>
@@ -412,6 +414,7 @@ var SKILLS={
   'sdd-final-review':{
     cmd:'/sdd-final-review:final-review [spec-id]',color:'#c8631f',title:'The Oracle of the Mountain',plugin:'sdd-final-review',
     img:'assets/oracle_mountain.png',
+    prompt:'A dramatic oil-painting scene set inside a dark stone mountain cavern lit by fire. An ancient, cloaked oracle figure sits at the center, surrounded by three ghostly agent specters — one holding a scroll (QA), one armored with a shield (Security), one wearing a golden crown (Tech Leader). Glowing runes float in the air. The mood is epic and arcane, like a Fighting Fantasy gamebook illustration. Warm orange and deep purple tones.',
     tagline:'Full multi-agent review pipeline — the boss encounter of the SDD workflow.',
     description:'Orchestrates QA Engineer and Security Engineer sub-agents in parallel, then runs the Tech Leader sequentially once both reports are ready. Saves a versioned cycle artifact and posts the verdict to the open GitHub PR.',
     steps:['Reads <code>$ARGUMENTS</code> as the spec-id (defaults to the sanitized current branch name).','Spawns <strong>QA Engineer</strong> and <strong>Security Engineer</strong> as parallel sub-agents — they explore the codebase independently.','Waits for both reports, then spawns the <strong>Tech Leader</strong> sequentially — reads every ADR in <code>docs/adrs/</code> and every lesson in <code>docs/learning-lessons/</code>.','Tech Leader issues a verdict and dispatches targeted agents for the next cycle (e.g. "QA only — verify coverage").','Saves the full report to <code>reports/sdd-final-review/&lt;spec-id&gt;/cycle-N-YYYYMMDD-HHmm.md</code>.','Posts verdict to the open PR via the GitHub plugin (optional, prompts user).','Main Claude Code session applies the required fixes. Cycle repeats until <strong>APPROVED</strong>.'],
@@ -422,7 +425,8 @@ var SKILLS={
   },
   'sdd-qa':{
     cmd:'/sdd-final-review:qa [context]',color:'#8f3a2a',title:'Scroll of Quality',plugin:'sdd-final-review',
-    img:'assets/scroll_quality.png',
+    img:'assets/scroll_quality.png',modalImg:'assets/modal/scroll_quality.png',
+    prompt:'A medieval gamebook illustration of a scholar-agent studying an open ancient scroll in a candlelit library. The scroll is filled with bug reports, checklists, and test results written in glowing red ink. Books and stacked parchments surround the figure. The agent wears a hood and spectacles. Mood: scholarly and focused. Deep red and amber tones, Fighting Fantasy pen-and-ink style.',
     tagline:'Standalone QA Engineer — can run independently or be called by the pipeline.',
     description:'Acts as a senior QA Engineer. Performs a thorough quality analysis of the current implementation: test coverage, SDD compliance, bug identification, and edge cases. Optionally requests a second opinion from Devin CLI.',
     steps:['Runs <code>git diff --name-only HEAD~1</code> to identify changed files.','Locates test files (<code>*.test.*</code>, <code>*.spec.*</code>, <code>__tests__/</code>) and measures coverage.','Checks SDD compliance: does the implementation match the spec? Are edge cases handled?','Identifies bugs, missing validations, and untested branches.','If <code>devin</code> is installed, optionally requests a second opinion and synthesizes it — never just relays it.','Returns a structured report with findings: <code>severity | description | file:line</code>.','Issues sub-agent verdict: <strong>PASS</strong> or <strong>FAIL</strong>.'],
@@ -433,7 +437,8 @@ var SKILLS={
   },
   'sdd-security':{
     cmd:'/sdd-final-review:security [context]',color:'#5a4a7a',title:"The Warlock's Shield",plugin:'sdd-final-review',
-    img:'assets/warlock_shield.png',
+    img:'assets/warlock_shield.png',modalImg:'assets/modal/warlock_shield.png',
+    prompt:'A dark fantasy illustration of a hooded warlock standing guard, holding an enchanted shield that glows with purple arcane wards and runes. Behind the shield, shadowy threats — skulls, daggers, glowing eyes — are being repelled. The setting is a stone fortress. Fighting Fantasy gamebook illustration style. Deep indigo, purple, and crimson tones.',
     tagline:'Standalone Security Engineer — OWASP, secrets, CVEs, auth/authz analysis.',
     description:'Acts as a senior Security Engineer. Performs a deep security analysis covering the OWASP Top 10, secret scanning, dependency CVEs, and authentication/authorization logic. Optionally uses Devin CLI as an external provider.',
     steps:['Scans changed files for OWASP Top 10 vulnerabilities: injection, XSS, IDOR, broken auth, etc.','Searches for hardcoded secrets, tokens, passwords, and private keys in the diff.','Checks package manifests for known CVEs (<code>package.json</code>, <code>requirements.txt</code>, <code>go.mod</code>…).','Reviews auth and authorization logic for missing guards or privilege escalation paths.','If <code>devin</code> is installed, optionally invokes it and synthesizes the output.','Returns a structured report: <code>severity | finding | file:line</code>.','Issues sub-agent verdict: <strong>PASS</strong> or <strong>FAIL</strong>.'],
@@ -445,6 +450,7 @@ var SKILLS={
   'sdd-tech':{
     cmd:'/sdd-final-review:tech [qa-report] [security-report]',color:'#9a6a1e',title:"The Elder's Judgment",plugin:'sdd-final-review',
     img:'assets/elder_judgment.png',
+    prompt:'A wise elder sage seated on a stone throne in a grand hall, holding a golden staff and reading two floating reports — one red (QA), one purple (Security). The elder\'s expression is stern and deliberate. Golden light emanates from the staff. Stacks of ancient ADR tomes and lesson scrolls are piled beside the throne. Fighting Fantasy gamebook illustration. Gold, amber, and deep brown tones.',
     tagline:'Tech Leader — sequential, reads all context, issues the final verdict and dispatches.',
     description:'Acts as a senior Tech Leader. Loads ADRs, Learning Lessons, and both QA + Security reports, then synthesizes them into a final verdict with targeted dispatch instructions for the next cycle.',
     steps:['Loads the QA report (from argument or previous <code>/sdd-qa</code> run).','Loads the Security report (from argument or previous <code>/sdd-security</code> run).','Reads ALL <code>.md</code> files from <code>docs/adrs/</code> — lists each ADR title explicitly.','Reads ALL <code>.md</code> files from <code>docs/learning-lessons/</code> — lists each lesson title.','Cross-references the implementation against every ADR for compliance violations.','Checks whether past learning lessons were applied or patterns were repeated.','Issues a verdict and, on NEEDS WORK, names <em>only</em> the agents needed next to save tokens.','Optionally posts the verdict to the open GitHub PR (asks user for confirmation).'],
@@ -455,7 +461,8 @@ var SKILLS={
   },
   'adr':{
     cmd:'/sdd-create-docs:adr [title and context]',color:'#4c6b3f',title:'The Codex of Decrees',plugin:'sdd-create-docs',
-    img:'assets/codex_decrees.png',
+    img:'assets/codex_decrees.png',modalImg:'assets/modal/codex_decress.png',
+    prompt:'A large stone codex book open on a pedestal in a mossy dungeon chamber. The pages glow with green-tinted magical writing — numbered decrees and architectural diagrams. A quill floats above, writing a new entry. Ivy and moss creep along the stone walls. Fighting Fantasy gamebook illustration style. Forest green, moss, and aged parchment tones.',
     tagline:'Creates Architecture Decision Records, auto-numbered and indexed in CLAUDE.md.',
     description:'Records a technical or architectural decision as an ADR file. Auto-detects the next ADR number, creates the file in <code>docs/adrs/</code>, and keeps the CLAUDE.md index up to date. The Tech Leader reads every ADR during each review cycle.',
     steps:['Detects the highest existing ADR number in <code>docs/adrs/</code> and increments it (e.g. <code>ADR-014</code>). Creates the folder if absent.','Extracts title, context, and decision from your message. Asks iteratively only for missing required fields.','Generates <code>docs/adrs/ADR-NNN-title-in-kebab-case.md</code> with sections: Status, Context, Decision, Alternatives, Consequences, References.','Omits optional sections if no content was provided — never invents content.','Appends a new row to the ADR table in <code>CLAUDE.md</code> (creates the section if absent).','Reports the created file path, CLAUDE.md update, and current ADR status.'],
@@ -467,6 +474,7 @@ var SKILLS={
   'learning-lesson':{
     cmd:'/sdd-create-docs:learning-lesson [title and context]',color:'#8a6d3b',title:"The Sage's Chronicle",plugin:'sdd-create-docs',
     img:'assets/saga_chronicle.png',
+    prompt:'An old sage sitting cross-legged beside a campfire deep in a stone cave, writing in an open leather-bound journal. Floating above the journal are glowing memories and lessons — small scenes of past battles and bug fixes. The sage wears amber robes with golden accents. Fighting Fantasy gamebook illustration style. Warm amber, ochre, and firelight tones.',
     tagline:'Captures lessons learned as structured docs, indexed in CLAUDE.md.',
     description:'Documents a technical discovery, insight, or lesson learned from development work. Creates a structured file in <code>docs/learning-lessons/</code> and keeps the CLAUDE.md index updated. The Tech Leader reads every lesson during review to check if past insights were applied.',
     steps:['Extracts title and context (where/when discovered) from your message. Asks only for missing required fields.','Creates <code>docs/learning-lessons/title_in_snake_case.md</code> (creates the folder if needed).','Generates structured content: Mental Model, API/code reference, practical examples from the project, relation to ADRs.','Omits any section for which no content was provided — never invents content.','Appends a new entry to the Learning Lessons list in <code>CLAUDE.md</code> (creates the section if absent).','Reports the created file path and CLAUDE.md update.'],
@@ -490,13 +498,39 @@ function dcModal(id){
   }
 
   modalContent.innerHTML=
-    '<div class="m-hd" style="border-top:4px solid '+s.color+';">'+
-      '<div class="m-cmd" style="color:'+s.color+';">'+s.cmd+'</div>'+
+    // ── Illustration ──
+    '<div style="border-top:4px solid '+s.color+';">'+
+      (s.modalImg
+        ? '<div style="background:#1a130a;border-bottom:1px solid rgba(90,66,32,.25);">'+
+            '<img src="'+s.modalImg+'" alt="'+s.title+'" style="width:100%;height:auto;display:block;">'+
+          '</div>'
+        : '<div style="position:relative;background:linear-gradient(#1a130a,#2c200f);border-bottom:1px solid rgba(90,66,32,.35);overflow:hidden;min-height:clamp(140px,24vw,200px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px clamp(20px,4vw,48px);">'+
+            '<div style="position:absolute;inset:0;background-image:radial-gradient(rgba(200,99,31,.07) 1px,transparent 1px);background-size:18px 18px;pointer-events:none;"></div>'+
+            '<div style="position:absolute;top:10px;right:12px;font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:'+s.color+';opacity:.7;background:rgba(0,0,0,.35);border:1px solid '+s.color+'44;padding:2px 8px;border-radius:10px;">Illustration · generate with AI</div>'+
+            '<div style="position:relative;text-align:center;max-width:560px;">'+
+              '<div style="color:'+s.color+';font-size:22px;margin-bottom:8px;opacity:.8;">🎨</div>'+
+              '<p style="margin:0;font-family:\'EB Garamond\',Georgia,serif;font-style:italic;font-size:clamp(13px,1.8vw,15px);line-height:1.6;color:#c8b490;">'+s.prompt+'</p>'+
+            '</div>'+
+            '<div style="position:absolute;bottom:0;left:0;right:0;height:50px;background:linear-gradient(transparent,rgba(26,19,10,.6));pointer-events:none;"></div>'+
+          '</div>'
+      )+
+    '</div>'+
+    // ── Header text ──
+    '<div class="m-hd">'+
       '<div id="modal-title" class="m-title">'+s.title+'</div>'+
       '<div class="m-plugin">Plugin: '+s.plugin+'</div>'+
       '<p class="m-tagline">'+s.tagline+'</p>'+
     '</div>'+
+    // ── Body ──
     '<div class="m-body">'+
+      '<div class="m-sec">'+
+        '<div class="m-sec-title">Incantation</div>'+
+        '<div class="m-cmd-block">'+
+          '<span style="color:#d9a441;font-family:\'JetBrains Mono\',monospace;font-size:14px;flex-shrink:0;">▸</span>'+
+          '<code class="m-cmd-code">'+s.cmd+'</code>'+
+          '<button onclick="dcCopyModalCmd(\''+id+'\')" class="m-copy-btn"><span id="mcmd-lbl">Copy</span></button>'+
+        '</div>'+
+      '</div>'+
       '<div class="m-sec"><div class="m-sec-title">Description</div><p class="m-p">'+s.description+'</p></div>'+
       '<div class="m-sec"><div class="m-sec-title">How it works</div>'+
         s.steps.map(function(st,i){return'<div class="m-step"><div class="m-n">'+(i+1)+'</div><div class="m-step-txt">'+st+'</div></div>';}).join('')+
@@ -506,16 +540,27 @@ function dcModal(id){
       '<div class="m-sec"><div class="m-sec-title">Tags</div><div class="m-tags">'+
         s.tags.map(function(t){return'<span class="m-tag" style="border-color:'+t.c+';color:'+t.c+';">'+t.l+'</span>';}).join('')+
       '</div></div>'+
-      '<div class="m-sec" style="text-align:center;">'+
-        '<button onclick="dcCopyInstall(\''+id+'\')" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;background:#2c2620;color:#ece0c6;border-radius:5px;padding:12px 22px;font-family:\'Cinzel\',serif;font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;">'+
-          '<span style="color:#d9a441;font-size:15px;">↓</span> <span id="mcopy-lbl">Copy install command</span>'+
-        '</button>'+
-        '<p style="margin-top:10px;font-family:\'Cinzel\',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9a8458;">Paste in your terminal, then restart Claude Code and type <code style="font-size:11px;font-family:\'JetBrains Mono\',monospace;">/'+id+'</code></p>'+
+      // ── Install ──
+      '<div class="m-sec" style="border-top:1px solid rgba(90,66,32,.2);margin-top:28px;padding-top:22px;">'+
+        '<div class="m-sec-title">Install</div>'+
+        '<div class="m-cmd-block">'+
+          '<span style="color:#d9a441;font-family:\'JetBrains Mono\',monospace;font-size:14px;flex-shrink:0;">▸</span>'+
+          '<code class="m-cmd-code">'+s.install+'</code>'+
+          '<button onclick="dcCopyInstall(\''+id+'\')" class="m-copy-btn"><span id="mcopy-lbl">Copy</span></button>'+
+        '</div>'+
+        '<p style="margin-top:6px;font-family:\'Cinzel\',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9a8458;">Paste in Claude Code, then invoke with <code style="font-size:11px;font-family:\'JetBrains Mono\',monospace;">'+s.cmd.split(' ')[0]+'</code></p>'+
       '</div>'+
     '</div>';
 
   modal.classList.add('open');
   document.body.style.overflow='hidden';
+}
+
+function dcCopyModalCmd(id){
+  var s=SKILLS[id]; if(!s) return;
+  try{navigator.clipboard&&navigator.clipboard.writeText(s.cmd);}catch(e){}
+  var lbl=document.getElementById('mcmd-lbl');
+  if(lbl&&!lbl.dataset.busy){var o=lbl.textContent;lbl.dataset.busy='1';lbl.textContent='Copied!';setTimeout(function(){lbl.textContent=o;delete lbl.dataset.busy;},1400);}
 }
 
 function dcCopyInstall(id){
