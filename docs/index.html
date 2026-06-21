@@ -413,7 +413,7 @@ function dcEasterDie(){
 var SKILLS={
   'sdd-final-review':{
     cmd:'/sdd-final-review:final-review [spec-id]',color:'#c8631f',title:'The Oracle of the Mountain',plugin:'sdd-final-review',
-    img:'assets/oracle_mountain.png',
+    img:'assets/oracle_mountain.png',modalImg:'assets/modal/oracle_mountain_modal.png',
     prompt:'A dramatic oil-painting scene set inside a dark stone mountain cavern lit by fire. An ancient, cloaked oracle figure sits at the center, surrounded by three ghostly agent specters — one holding a scroll (QA), one armored with a shield (Security), one wearing a golden crown (Tech Leader). Glowing runes float in the air. The mood is epic and arcane, like a Fighting Fantasy gamebook illustration. Warm orange and deep purple tones.',
     tagline:'Full multi-agent review pipeline — the boss encounter of the SDD workflow.',
     description:'Orchestrates QA Engineer and Security Engineer sub-agents in parallel, then runs the Tech Leader sequentially once both reports are ready. Saves a versioned cycle artifact and posts the verdict to the open GitHub PR.',
@@ -425,7 +425,7 @@ var SKILLS={
   },
   'sdd-qa':{
     cmd:'/sdd-final-review:qa [context]',color:'#8f3a2a',title:'Scroll of Quality',plugin:'sdd-final-review',
-    img:'assets/scroll_quality.png',modalImg:'assets/modal/scroll_quality.png',
+    img:'assets/scroll_quality.png',modalImg:'assets/modal/scroll_quality_modal.png',
     prompt:'A medieval gamebook illustration of a scholar-agent studying an open ancient scroll in a candlelit library. The scroll is filled with bug reports, checklists, and test results written in glowing red ink. Books and stacked parchments surround the figure. The agent wears a hood and spectacles. Mood: scholarly and focused. Deep red and amber tones, Fighting Fantasy pen-and-ink style.',
     tagline:'Standalone QA Engineer — can run independently or be called by the pipeline.',
     description:'Acts as a senior QA Engineer. Performs a thorough quality analysis of the current implementation: test coverage, SDD compliance, bug identification, and edge cases. Optionally requests a second opinion from Devin CLI.',
@@ -437,7 +437,7 @@ var SKILLS={
   },
   'sdd-security':{
     cmd:'/sdd-final-review:security [context]',color:'#5a4a7a',title:"The Warlock's Shield",plugin:'sdd-final-review',
-    img:'assets/warlock_shield.png',modalImg:'assets/modal/warlock_shield.png',
+    img:'assets/warlock_shield.png',modalImg:'assets/modal/warlock_shield_modal.png',
     prompt:'A dark fantasy illustration of a hooded warlock standing guard, holding an enchanted shield that glows with purple arcane wards and runes. Behind the shield, shadowy threats — skulls, daggers, glowing eyes — are being repelled. The setting is a stone fortress. Fighting Fantasy gamebook illustration style. Deep indigo, purple, and crimson tones.',
     tagline:'Standalone Security Engineer — OWASP, secrets, CVEs, auth/authz analysis.',
     description:'Acts as a senior Security Engineer. Performs a deep security analysis covering the OWASP Top 10, secret scanning, dependency CVEs, and authentication/authorization logic. Optionally uses Devin CLI as an external provider.',
@@ -449,7 +449,7 @@ var SKILLS={
   },
   'sdd-tech':{
     cmd:'/sdd-final-review:tech [qa-report] [security-report]',color:'#9a6a1e',title:"The Elder's Judgment",plugin:'sdd-final-review',
-    img:'assets/elder_judgment.png',
+    img:'assets/elder_judgment.png',modalImg:'assets/modal/elder_judgment_modal.png',
     prompt:'A wise elder sage seated on a stone throne in a grand hall, holding a golden staff and reading two floating reports — one red (QA), one purple (Security). The elder\'s expression is stern and deliberate. Golden light emanates from the staff. Stacks of ancient ADR tomes and lesson scrolls are piled beside the throne. Fighting Fantasy gamebook illustration. Gold, amber, and deep brown tones.',
     tagline:'Tech Leader — sequential, reads all context, issues the final verdict and dispatches.',
     description:'Acts as a senior Tech Leader. Loads ADRs, Learning Lessons, and both QA + Security reports, then synthesizes them into a final verdict with targeted dispatch instructions for the next cycle.',
@@ -461,7 +461,7 @@ var SKILLS={
   },
   'adr':{
     cmd:'/sdd-create-docs:adr [title and context]',color:'#4c6b3f',title:'The Codex of Decrees',plugin:'sdd-create-docs',
-    img:'assets/codex_decrees.png',modalImg:'assets/modal/codex_decress.png',
+    img:'assets/codex_decrees.png',modalImg:'assets/modal/codex_decrees_modal.png',
     prompt:'A large stone codex book open on a pedestal in a mossy dungeon chamber. The pages glow with green-tinted magical writing — numbered decrees and architectural diagrams. A quill floats above, writing a new entry. Ivy and moss creep along the stone walls. Fighting Fantasy gamebook illustration style. Forest green, moss, and aged parchment tones.',
     tagline:'Creates Architecture Decision Records, auto-numbered and indexed in CLAUDE.md.',
     description:'Records a technical or architectural decision as an ADR file. Auto-detects the next ADR number, creates the file in <code>docs/adrs/</code>, and keeps the CLAUDE.md index up to date. The Tech Leader reads every ADR during each review cycle.',
@@ -473,7 +473,7 @@ var SKILLS={
   },
   'learning-lesson':{
     cmd:'/sdd-create-docs:learning-lesson [title and context]',color:'#8a6d3b',title:"The Sage's Chronicle",plugin:'sdd-create-docs',
-    img:'assets/saga_chronicle.png',
+    img:'assets/saga_chronicle.png',modalImg:'assets/modal/sage_chronicle_modal.png',
     prompt:'An old sage sitting cross-legged beside a campfire deep in a stone cave, writing in an open leather-bound journal. Floating above the journal are glowing memories and lessons — small scenes of past battles and bug fixes. The sage wears amber robes with golden accents. Fighting Fantasy gamebook illustration style. Warm amber, ochre, and firelight tones.',
     tagline:'Captures lessons learned as structured docs, indexed in CLAUDE.md.',
     description:'Documents a technical discovery, insight, or lesson learned from development work. Creates a structured file in <code>docs/learning-lessons/</code> and keeps the CLAUDE.md index updated. The Tech Leader reads every lesson during review to check if past insights were applied.',
