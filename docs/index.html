@@ -346,31 +346,46 @@
         </div><!-- /grid -->
       </section>
 
-      <!-- ══ 3. NEXT CHAPTER: AGENT TEAMS ══ -->
-      <section style="border:1.5px dashed rgba(90,66,32,.45);border-radius:6px;overflow:hidden;background:radial-gradient(120% 100% at 0% 0%,rgba(90,74,122,.08),transparent 60%),radial-gradient(100% 100% at 100% 100%,rgba(200,99,31,.06),transparent 60%);">
-        <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(180px,1fr);gap:0;">
-          <div style="padding:28px 32px;display:flex;flex-direction:column;gap:14px;">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#9a7848;background:rgba(90,74,122,.12);border:1px solid rgba(90,74,122,.35);padding:3px 10px;border-radius:20px;">Coming Next</div>
-              <span style="flex:1;height:1px;background:linear-gradient(90deg,rgba(90,66,32,.3),transparent);"></span>
-            </div>
-            <h2 style="margin:0;font-family:'Cinzel',serif;font-weight:700;font-size:clamp(18px,2vw,22px);letter-spacing:.02em;color:var(--ink);">The Next Dungeon — Agent Teams</h2>
-            <p style="font-size:16px;line-height:1.65;color:var(--ink2);margin:0;">
-              The current pipeline runs on <strong>sub-agents</strong>: a single orchestrator spawns QA, Security, and Tech Leader, and waits for each in turn. A new architecture is being mapped —
-              <strong style="color:var(--royal);">Agent Teams</strong>, Claude's peer-autonomy model, where each reviewer operates as an independent agent, coordinating without a central dispatcher.
-            </p>
-            <p style="font-size:15px;line-height:1.6;color:#7a6040;margin:0;">
-              In an Agent Teams model, QA, Security, and Tech Leader would each hold their own context and communicate as peers — enabling longer, deeper reviews without a single session growing unbounded. Implementation in progress.
-            </p>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
-              <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--royal);color:var(--royal);padding:3px 9px;border-radius:3px;">Peer autonomy</span>
-              <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 9px;border-radius:3px;">Distributed context</span>
-              <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 9px;border-radius:3px;">No central orchestrator</span>
-              <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--amber);color:var(--amber);padding:3px 9px;border-radius:3px;">Under development</span>
-            </div>
-          </div>
-          <img src="assets/agent_teams.png" alt="The Next Dungeon — Agent Teams" style="min-height:220px;width:100%;object-fit:cover;object-position:center top;border-left:1px dashed rgba(90,66,32,.3);display:block;">
+      <!-- ══ 3. THE FANTASY GAMEBOOK ENGINE ══ -->
+      <section style="display:flex;flex-direction:column;gap:22px;">
+        <div style="display:flex;align-items:center;gap:14px;justify-content:center;text-align:center;">
+          <span style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(90,66,32,.45));"></span>
+          <span style="color:var(--ember);">◆</span>
+          <h2 style="margin:0;font-family:'Cinzel',serif;font-weight:700;font-size:15px;letter-spacing:.26em;text-transform:uppercase;">A New Realm — Game Plugins</h2>
+          <span style="color:var(--ember);">◆</span>
+          <span style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(90,66,32,.45));"></span>
         </div>
+
+        <article style="position:relative;border:2px solid var(--ink);border-radius:6px;background:linear-gradient(#e9dcbe,#e1d2b0);overflow:hidden;box-shadow:0 12px 30px -16px rgba(60,40,10,.5);">
+          <div style="height:5px;background:linear-gradient(90deg,var(--moss),var(--royal));"></div>
+          <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(200px,1fr);gap:0;">
+            <div style="padding:30px;display:flex;flex-direction:column;gap:18px;border-right:1px solid rgba(90,66,32,.25);">
+              <div style="display:flex;align-items:flex-start;gap:14px;">
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--moss);letter-spacing:.04em;">/game-master</div>
+                  <h3 style="margin:4px 0 0;font-family:'Cinzel',serif;font-weight:600;font-size:clamp(21px,2.2vw,26px);line-height:1.15;letter-spacing:.01em;color:var(--ink);">The Fantasy Gamebook Engine</h3>
+                  <div style="display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#4c6b3f;background:rgba(76,107,63,.12);border:1px solid rgba(76,107,63,.3);padding:3px 9px;border-radius:20px;">Game Plugin · Playable Now</div>
+                </div>
+              </div>
+              <p style="margin:0;font-size:16.5px;line-height:1.55;color:var(--ink2);">A solo-play Fighting Fantasy–style gamebook where Claude narrates and an MCP server decides every dice roll, stat change, and combat outcome. The AI never invents a number. The engine never lies.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:7px;">
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--moss);color:var(--moss);padding:3px 9px;border-radius:3px;">MCP Engine</span>
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--royal);color:var(--royal);padding:3px 9px;border-radius:3px;">3 Skills</span>
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 9px;border-radius:3px;">4 Commands</span>
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--amber);color:var(--amber);padding:3px 9px;border-radius:3px;">18 MCP Tools</span>
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--blood);color:var(--blood);padding:3px 9px;border-radius:3px;">Ignarok Module</span>
+                <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--moss);color:var(--moss);padding:3px 9px;border-radius:3px;">Python · 158 Tests</span>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button onclick="window.open('fantasy-gamebook/', '_blank')" class="dc-details" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);background:linear-gradient(135deg,rgba(76,107,63,.15),rgba(90,74,122,.12));border:1.5px solid rgba(76,107,63,.5);padding:8px 16px;border-radius:3px;">Enter the Mountain →</button>
+                <button onclick="dcCopy(this)" data-copy="git clone https://github.com/rc-ventura/fantasy-gamebook-engine" class="dc-install" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;background:var(--ink);color:#ece0c6;border-radius:4px;padding:7px 16px;font-family:'Cinzel',serif;font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">
+                  <span style="color:var(--gold);font-size:13px;">↓</span><span data-copylabel="">Clone engine</span>
+                </button>
+              </div>
+            </div>
+            <img src="assets/agent_teams.png" alt="The Fantasy Gamebook Engine — The Grey Mountain" style="min-height:220px;width:100%;object-fit:cover;object-position:center top;border-left:1px solid rgba(90,66,32,.18);display:block;">
+          </div>
+        </article>
       </section>
 
       <!-- ══ FOOTER ══ -->

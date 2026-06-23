@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fantasy Gamebook Engine · The Grimoire of Claude Code</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#14100c}
+  @keyframes flick{0%,100%{opacity:.85;transform:scale(1)}45%{opacity:1;transform:scale(1.04)}70%{opacity:.78;transform:scale(.99)}}
+  .back-link:hover{background:rgba(90,66,32,.14)!important;color:#ece0c6!important}
+  .copy-btn:hover{background:rgba(217,164,65,.14)!important}
+  .skill-card:hover{box-shadow:0 8px 24px -10px rgba(60,40,10,.45)!important;transform:translateY(-1px)}
+  .skill-card{transition:box-shadow .15s,transform .15s}
+  .tab-btn{transition:background .15s,color .15s}
+  @media(max-width:640px){
+    .arch-grid{grid-template-columns:1fr!important}
+    .arch-arrow{transform:rotate(90deg);margin:0 auto}
+    .skills-grid{grid-template-columns:1fr!important}
+    .cmds-grid{grid-template-columns:1fr!important}
+    .install-grid{grid-template-columns:1fr!important}
+  }
+</style>
+</head>
+<body>
+
+<div style="--ember:#c8631f;--gold:#d9a441;--parch:#ece0c6;--ink:#2c2620;--ink2:#62553f;--blood:#8f3a2a;--moss:#4c6b3f;--royal:#5a4a7a;--amber:#8a6d3b;font-family:'EB Garamond',Georgia,serif;min-height:100vh;padding:clamp(14px,3.5vw,48px);background:radial-gradient(120% 80% at 18% 0%,rgba(76,107,63,.18),transparent 46%),radial-gradient(120% 80% at 84% 6%,rgba(90,74,122,.14),transparent 50%),radial-gradient(140% 120% at 50% 120%,rgba(0,0,0,.6),transparent 60%),repeating-linear-gradient(90deg,#16120d 0 2px,#171109 2px 4px),linear-gradient(#161109,#0f0c08);">
+<div style="max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:32px;">
+
+  <!-- TOP NAV -->
+  <nav style="display:flex;align-items:center;justify-content:space-between;">
+    <a href="../" class="back-link" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#9a8458;border:1px solid rgba(217,164,65,.3);padding:6px 12px;border-radius:3px;">
+      ← Back to the Grimoire
+    </a>
+    <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(154,132,88,.6);">Firetop Mountain Registry</div>
+  </nav>
+
+  <!-- HEADER -->
+  <header style="position:relative;text-align:center;padding:4px 0 8px;color:#efe1c1;">
+    <div aria-hidden="true" style="position:absolute;top:20px;left:4%;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 24px 10px rgba(76,107,63,.6);animation:flick 1.7s ease-in-out infinite;"></div>
+    <div aria-hidden="true" style="position:absolute;top:20px;right:4%;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 24px 10px rgba(90,74,122,.6);animation:flick 2.0s ease-in-out infinite;"></div>
+    <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--moss);margin-bottom:14px;">Game Plugin · Firetop Mountain Registry</div>
+    <h1 style="margin:0;font-family:'Cinzel Decorative',serif;font-weight:900;line-height:1.1;font-size:clamp(24px,3.5vw,40px);color:#f3e7c6;text-shadow:0 2px 0 #1c130a,0 0 30px rgba(76,107,63,.4);letter-spacing:.01em;">The Fantasy Gamebook Engine</h1>
+    <p style="max-width:580px;margin:16px auto 0;font-size:clamp(16px,2vw,20px);line-height:1.5;color:#cdbf9a;font-style:italic;">"You are the hero. Claude narrates. The engine decides."</p>
+  </header>
+
+  <!-- PARCHMENT -->
+  <main style="position:relative;background:linear-gradient(#efe3c9,#e7d9bb);border-radius:6px;padding:clamp(22px,4vw,52px);color:var(--ink);box-shadow:0 40px 80px -30px rgba(0,0,0,.85),inset 0 0 0 1px rgba(120,90,40,.18),inset 0 0 120px rgba(120,90,40,.12);background-image:radial-gradient(rgba(120,90,40,.05) 1px,transparent 1px),linear-gradient(#efe3c9,#e7d9bb);background-size:5px 5px,100% 100%;">
+    <div style="position:absolute;inset:12px;border:1.5px solid rgba(90,66,32,.4);border-radius:3px;pointer-events:none;"></div>
+    <div style="position:absolute;inset:17px;border:1px solid rgba(90,66,32,.2);border-radius:2px;pointer-events:none;"></div>
+    <span style="position:absolute;top:9px;left:9px;color:var(--moss);font-size:14px;">◆</span>
+    <span style="position:absolute;top:9px;right:9px;color:var(--royal);font-size:14px;">◆</span>
+    <span style="position:absolute;bottom:9px;left:9px;color:var(--royal);font-size:14px;">◆</span>
+    <span style="position:absolute;bottom:9px;right:9px;color:var(--moss);font-size:14px;">◆</span>
+
+    <div style="position:relative;display:flex;flex-direction:column;gap:52px;">
+
+      <!-- INTRO BLOCK -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+          <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#4c6b3f;background:rgba(76,107,63,.12);border:1px solid rgba(76,107,63,.35);padding:3px 10px;border-radius:20px;">Game Plugin</span>
+          <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#5a4a7a;background:rgba(90,74,122,.1);border:1px solid rgba(90,74,122,.35);padding:3px 10px;border-radius:20px;">Phase 1 MVP · 158 Tests</span>
+          <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7a6040;background:rgba(90,66,32,.08);border:1px solid rgba(90,66,32,.3);padding:3px 10px;border-radius:20px;">Python · MCP · Claude Code</span>
+        </div>
+        <p style="font-size:17px;line-height:1.65;color:var(--ink2);max-width:720px;">A solo-play <strong style="color:var(--ink);">Fighting Fantasy–style gamebook</strong> engine where Claude acts as the game master and narrator, but every dice roll, stat change, and combat outcome is decided by a local MCP server. The AI improvises the story. The engine arbitrates reality.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--moss);color:var(--moss);padding:3px 9px;border-radius:3px;">3 Skills</span>
+          <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--royal);color:var(--royal);padding:3px 9px;border-radius:3px;">4 Commands</span>
+          <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:3px 9px;border-radius:3px;">MCP · 18 Tools</span>
+          <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--amber);color:var(--amber);padding:3px 9px;border-radius:3px;">96% Coverage</span>
+          <span style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--blood);color:var(--blood);padding:3px 9px;border-radius:3px;">Ignarok Debut Module</span>
+        </div>
+      </div>
+
+      <!-- §1 THE CONCEPT -->
+      <section>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;">
+          <span style="flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1.5px solid var(--ink);border-radius:50%;font-family:'Cinzel Decorative',serif;font-weight:700;font-size:13px;color:var(--ink);">§1</span>
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(90,66,32,.4),transparent);"></div>
+          <h2 style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);white-space:nowrap;">The Concept</h2>
+          <div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(90,66,32,.4),transparent);"></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <p style="font-size:16.5px;line-height:1.65;color:var(--ink2);">Classic gamebooks (Fighting Fantasy, Lone Wolf) are books where you make choices, roll dice, and track your own stats. The engine recreates that experience in Claude Code — but with one hard rule that shapes the entire architecture:</p>
+          <blockquote style="border-left:3px solid var(--moss);padding:12px 18px;background:rgba(76,107,63,.06);border-radius:0 4px 4px 0;font-style:italic;font-size:17px;line-height:1.55;color:var(--ink);">The AI <strong>never invents a number and never rolls a die in prose.</strong> Every random outcome, stat change, and combat result goes through the MCP server. Claude narrates what the engine returns — nothing more.</blockquote>
+          <p style="font-size:16px;line-height:1.65;color:var(--ink2);">This separation is the whole point: the AI handles language and story. The engine handles math and state. Swap the AI for a different model tomorrow — the rules stay identical. Swap the adventure module — the engine never changes.</p>
+        </div>
+
+        <!-- ARCHITECTURE DIAGRAM -->
+        <div style="margin-top:28px;padding:24px;background:rgba(44,38,32,.05);border:1px solid rgba(90,66,32,.2);border-radius:6px;">
+          <div style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:18px;text-align:center;">Architecture</div>
+          <div class="arch-grid" style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;">
+
+            <!-- Claude box -->
+            <div style="border:1.5px solid rgba(90,66,32,.35);border-radius:5px;padding:16px 18px;background:linear-gradient(135deg,rgba(200,99,31,.06),transparent);">
+              <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember);margin-bottom:10px;">Claude — The Narrator</div>
+              <div style="display:flex;flex-direction:column;gap:5px;">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">game-master skill</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">combat-sub-agent skill</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">ignarok lore pack</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">/hero /backpack /map /save</div>
+              </div>
+              <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(90,66,32,.18);font-size:12px;color:var(--amber);font-style:italic;">narrates · chooses · lore</div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="arch-arrow" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 4px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--moss);white-space:nowrap;">tool calls</div>
+              <div style="font-size:20px;color:rgba(90,66,32,.5);">⇄</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--royal);white-space:nowrap;">results</div>
+            </div>
+
+            <!-- MCP Engine box -->
+            <div style="border:1.5px solid rgba(76,107,63,.4);border-radius:5px;padding:16px 18px;background:linear-gradient(135deg,rgba(76,107,63,.07),transparent);">
+              <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--moss);margin-bottom:10px;">MCP Server — The Arbiter</div>
+              <div style="display:flex;flex-direction:column;gap:5px;">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">roll_dice · test_luck</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">start_combat · resolve_round</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">read/write character sheet</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">save_progress · read_world</div>
+              </div>
+              <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(76,107,63,.2);font-size:12px;color:var(--moss);font-style:italic;">decides · persists · arbitrates</div>
+            </div>
+
+          </div>
+          <p style="margin-top:16px;font-size:13.5px;color:var(--ink2);text-align:center;font-style:italic;">18 MCP tools. The AI calls them; the engine answers. No number is invented in prose.</p>
+        </div>
+      </section>
+
+      <!-- §2 THE HARNESS — SKILLS -->
+      <section>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;">
+          <span style="flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1.5px solid var(--ink);border-radius:50%;font-family:'Cinzel Decorative',serif;font-weight:700;font-size:13px;color:var(--ink);">§2</span>
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(90,66,32,.4),transparent);"></div>
+          <h2 style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);white-space:nowrap;">The Harness — Skills</h2>
+          <div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(90,66,32,.4),transparent);"></div>
+        </div>
+        <p style="font-size:15.5px;color:var(--ink2);line-height:1.6;margin-bottom:20px;">Three Claude Code skills form the harness — the AI layer that sits on top of the engine. They are installed as Markdown files into your <code style="font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(44,38,32,.08);padding:1px 5px;border-radius:3px;">~/.claude/skills/</code> directory.</p>
+
+        <div class="skills-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+
+          <!-- game-master -->
+          <div class="skill-card" style="border:1.5px solid var(--ink);border-radius:5px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
+            <div style="height:4px;background:var(--ember);"></div>
+            <div style="padding:18px 16px;display:flex;flex-direction:column;gap:12px;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ember);">/game-master</div>
+                <h3 style="margin:4px 0 0;font-family:'Cinzel',serif;font-weight:600;font-size:16px;line-height:1.2;color:var(--ink);">The Narrator</h3>
+              </div>
+              <p style="font-size:14px;line-height:1.5;color:var(--ink2);">Orchestrates every session: opens the character sheet from MCP, narrates turns in second person, offers numbered choices, delegates combat to the sub-agent, and compacts context.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ember);color:var(--ember);padding:2px 7px;border-radius:3px;">Orchestrator</span>
+                <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:2px 7px;border-radius:3px;">Session loop</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- combat-sub-agent -->
+          <div class="skill-card" style="border:1.5px solid var(--ink);border-radius:5px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
+            <div style="height:4px;background:var(--blood);"></div>
+            <div style="padding:18px 16px;display:flex;flex-direction:column;gap:12px;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blood);">/combat-sub-agent</div>
+                <h3 style="margin:4px 0 0;font-family:'Cinzel',serif;font-weight:600;font-size:16px;line-height:1.2;color:var(--ink);">The Combat Arbiter</h3>
+              </div>
+              <p style="font-size:14px;line-height:1.5;color:var(--ink2);">Runs one fight end-to-end via MCP tools only. The Game Master delegates a fight, passing hero stats and the enemy list. Returns a single FinalResult for the master to narrate.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--blood);color:var(--blood);padding:2px 7px;border-radius:3px;">Sub-agent</span>
+                <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:2px 7px;border-radius:3px;">MCP only</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ignarok -->
+          <div class="skill-card" style="border:1.5px solid var(--ink);border-radius:5px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
+            <div style="height:4px;background:var(--royal);"></div>
+            <div style="padding:18px 16px;display:flex;flex-direction:column;gap:12px;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--royal);">/ignarok</div>
+                <h3 style="margin:4px 0 0;font-family:'Cinzel',serif;font-weight:600;font-size:16px;line-height:1.2;color:var(--ink);">The Grey Mountain Lore</h3>
+              </div>
+              <p style="font-size:14px;line-height:1.5;color:var(--ink2);">The debut adventure module — a static lore pack. Six zones of the Grey Mountain, a full bestiary, and one archmage to defeat. Swap this file to play a different adventure.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--royal);color:var(--royal);padding:2px 7px;border-radius:3px;">Lore pack</span>
+                <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:2px 7px;border-radius:3px;">Swappable</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- §3 COMMANDS -->
+      <section>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;">
+          <span style="flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1.5px solid var(--ink);border-radius:50%;font-family:'Cinzel Decorative',serif;font-weight:700;font-size:13px;color:var(--ink);">§3</span>
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(90,66,32,.4),transparent);"></div>
+          <h2 style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);white-space:nowrap;">The Commands — Incantations</h2>
+          <div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(90,66,32,.4),transparent);"></div>
+        </div>
+        <p style="font-size:15.5px;color:var(--ink2);line-height:1.6;margin-bottom:20px;">Four slash commands read or write game state directly via MCP — without altering the narrative. Available at any time, even mid-combat.</p>
+
+        <div class="cmds-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+
+          <div style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
+            <code style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--moss);white-space:nowrap;flex-shrink:0;">/hero</code>
+            <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin:0;">Print the full character sheet — skill, stamina, luck, gold, provisions, inventory — straight from MCP state. Never a narrated value.</p>
+          </div>
+
+          <div style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
+            <code style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ember);white-space:nowrap;flex-shrink:0;">/backpack</code>
+            <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin:0;">List inventory, gold and provisions. Optionally use or consume an item — the state change goes through MCP, not prose.</p>
+          </div>
+
+          <div style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
+            <code style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--royal);white-space:nowrap;flex-shrink:0;">/map</code>
+            <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin:0;">Show current location and every visited zone from real world state. Read-only — changes nothing, reflects the engine exactly.</p>
+          </div>
+
+          <div style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
+            <code style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--amber);white-space:nowrap;flex-shrink:0;">/save</code>
+            <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin:0;">Checkpoint current progress via MCP. Accepts an optional slot name. Confirms with the slot identifier on success.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- §4 INSTALL -->
+      <section>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;">
+          <span style="flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1.5px solid var(--ink);border-radius:50%;font-family:'Cinzel Decorative',serif;font-weight:700;font-size:13px;color:var(--ink);">§4</span>
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(90,66,32,.4),transparent);"></div>
+          <h2 style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);white-space:nowrap;">Claim the Engine</h2>
+          <div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(90,66,32,.4),transparent);"></div>
+        </div>
+
+        <div class="install-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+
+          <!-- PATH A: git clone (works now) -->
+          <div style="border:2px solid var(--ink);border-radius:6px;overflow:hidden;">
+            <div style="height:4px;background:linear-gradient(90deg,var(--moss),var(--royal));"></div>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
+              <div>
+                <div style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--moss);margin-bottom:6px;">Available Now</div>
+                <h3 style="font-family:'Cinzel',serif;font-weight:600;font-size:16px;color:var(--ink);">Clone the Engine</h3>
+                <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin-top:6px;">Full source — run the engine locally. The <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(44,38,32,.08);padding:1px 4px;border-radius:2px;">.mcp.json</code> auto-registers the server when you open the directory in Claude Code.</p>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);">Step 1 — Clone</div>
+                <div style="display:flex;align-items:center;gap:8px;background:#2c2620;border-radius:4px;padding:10px 12px;border:1px solid #3e3428;">
+                  <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#ece0c6;flex:1;word-break:break-all;">git clone https://github.com/rc-ventura/fantasy-gamebook-engine</code>
+                  <button onclick="dcCopy(this)" data-copy="git clone https://github.com/rc-ventura/fantasy-gamebook-engine" class="copy-btn" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;padding:3px 8px;border:1px solid rgba(217,164,65,.3);border-radius:3px;"><span data-copylabel="">Copy</span></button>
+                </div>
+
+                <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);">Step 2 — Install deps</div>
+                <div style="display:flex;align-items:center;gap:8px;background:#2c2620;border-radius:4px;padding:10px 12px;border:1px solid #3e3428;">
+                  <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#ece0c6;flex:1;">cd fantasy-gamebook-engine &amp;&amp; uv sync</code>
+                  <button onclick="dcCopy(this)" data-copy="cd fantasy-gamebook-engine && uv sync" class="copy-btn" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;padding:3px 8px;border:1px solid rgba(217,164,65,.3);border-radius:3px;"><span data-copylabel="">Copy</span></button>
+                </div>
+
+                <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);">Step 3 — Open in Claude Code</div>
+                <div style="background:#2c2620;border-radius:4px;padding:10px 12px;border:1px solid #3e3428;">
+                  <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#ece0c6;display:block;">claude .</code>
+                  <div style="font-size:12px;color:rgba(236,224,198,.5);margin-top:5px;">MCP server auto-registers from .mcp.json</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PATH B: PyPI/uvx (coming soon) -->
+          <div style="border:1.5px dashed rgba(90,66,32,.45);border-radius:6px;overflow:hidden;opacity:.85;">
+            <div style="height:4px;background:linear-gradient(90deg,rgba(90,74,122,.5),rgba(217,164,65,.4));"></div>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
+              <div>
+                <div style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:6px;">Coming Soon — PyPI Release</div>
+                <h3 style="font-family:'Cinzel',serif;font-weight:600;font-size:16px;color:var(--ink);">Install Without Cloning</h3>
+                <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin-top:6px;">Once published to PyPI, <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(44,38,32,.08);padding:1px 4px;border-radius:2px;">uvx</code> fetches and runs the engine with no local Python setup. The MCP config becomes a single URL entry.</p>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(154,110,59,.7);">Step 1 — Install skills from the Grimoire</div>
+                <div style="background:rgba(44,38,32,.12);border-radius:4px;padding:10px 12px;border:1px solid rgba(62,52,40,.5);">
+                  <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:rgba(236,224,198,.6);">bash install.sh fantasy-gamebook</code>
+                </div>
+
+                <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(154,110,59,.7);">Step 2 — MCP config (auto via uvx)</div>
+                <div style="background:rgba(44,38,32,.12);border-radius:4px;padding:10px 12px;border:1px solid rgba(62,52,40,.5);">
+                  <code style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(236,224,198,.6);display:block;white-space:pre;">{"mcpServers":{"gamebook":{
+  "command":"uvx",
+  "args":["gamebook"]
+}}}</code>
+                </div>
+
+                <div style="padding:10px 12px;background:rgba(90,66,32,.08);border:1px solid rgba(90,66,32,.2);border-radius:4px;">
+                  <div style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:4px;">In Progress</div>
+                  <p style="font-size:13px;color:var(--ink2);line-height:1.4;">PyPI publication requires <code style="font-family:'JetBrains Mono',monospace;font-size:11px;">uv publish</code> from the engine repo. Follow <a href="https://github.com/rc-ventura/fantasy-gamebook-engine" target="_blank" style="color:var(--moss);">the repo</a> for the release.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- §5 BEGIN YOUR ADVENTURE -->
+      <section>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;">
+          <span style="flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1.5px solid var(--ink);border-radius:50%;font-family:'Cinzel Decorative',serif;font-weight:700;font-size:13px;color:var(--ink);">§5</span>
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(90,66,32,.4),transparent);"></div>
+          <h2 style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);white-space:nowrap;">Begin Your Adventure</h2>
+          <div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(90,66,32,.4),transparent);"></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <p style="font-size:16px;line-height:1.6;color:var(--ink2);">Once the engine is cloned and Claude Code is open in the directory, the MCP server is live. Type the first incantation:</p>
+
+          <div style="display:flex;align-items:center;gap:10px;background:#2c2620;border-radius:4px;padding:14px 16px;border:1px solid rgba(76,107,63,.4);box-shadow:0 0 0 1px rgba(76,107,63,.1);">
+            <span style="color:var(--moss);font-size:16px;">▸</span>
+            <code style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#ece0c6;flex:1;">/game-master</code>
+            <button onclick="dcCopy(this)" data-copy="/game-master" class="copy-btn" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;padding:4px 10px;border:1px solid rgba(217,164,65,.3);border-radius:3px;"><span data-copylabel="">Copy</span></button>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;padding:18px;border:1px solid rgba(90,66,32,.22);border-radius:5px;background:rgba(44,38,32,.03);">
+            <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);">What happens next</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--moss);flex-shrink:0;margin-top:1px;">1.</span>
+                <p style="font-size:15px;line-height:1.5;color:var(--ink2);margin:0;">Claude reads the <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(44,38,32,.08);padding:1px 4px;border-radius:2px;">ignarok</code> lore pack and checks for an existing character via MCP.</p>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--moss);flex-shrink:0;margin-top:1px;">2.</span>
+                <p style="font-size:15px;line-height:1.5;color:var(--ink2);margin:0;">If no hero exists, the engine rolls your attributes (skill, stamina, luck) via MCP — not in prose.</p>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--moss);flex-shrink:0;margin-top:1px;">3.</span>
+                <p style="font-size:15px;line-height:1.5;color:var(--ink2);margin:0;">Claude narrates the opening scene of the Grey Mountain and offers your first choices. The adventure begins at §1.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER / BACK -->
+      <div style="text-align:center;border-top:1px solid rgba(90,66,32,.3);padding-top:28px;display:flex;flex-direction:column;gap:16px;align-items:center;">
+        <div style="color:var(--moss);font-size:16px;">◆ ◆ ◆</div>
+        <p style="font-style:italic;font-size:16px;color:var(--ink2);">"You stand at the foot of the Grey Mountain. The wind smells of ash and old iron. Turn to §1."</p>
+        <a href="../" class="back-link" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#9a8458;border:1px solid rgba(217,164,65,.3);padding:7px 14px;border-radius:3px;">← Return to the Grimoire</a>
+        <p style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(90,66,32,.4);">Hosted in the dungeons of GitHub Pages</p>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+</div>
+
+<script>
+function dcCopy(btn){
+  var text=btn.getAttribute('data-copy')||'';
+  try{navigator.clipboard&&navigator.clipboard.writeText(text);}catch(e){}
+  var lbl=btn.querySelector('[data-copylabel]');
+  if(lbl&&!lbl.dataset.busy){var o=lbl.textContent;lbl.dataset.busy='1';lbl.textContent='Copied!';setTimeout(function(){lbl.textContent=o;delete lbl.dataset.busy;},1400);}
+}
+</script>
+</body>
+</html>
