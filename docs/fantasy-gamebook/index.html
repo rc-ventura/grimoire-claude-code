@@ -12,6 +12,12 @@
   body{background:#14100c}
   @keyframes flick{0%,100%{opacity:.85;transform:scale(1)}45%{opacity:1;transform:scale(1.04)}70%{opacity:.78;transform:scale(.99)}}
   @keyframes modalIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes zoomIn{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:scale(1)}}
+  .arch-img{cursor:zoom-in;transition:opacity .15s;}
+  .arch-img:hover{opacity:.9}
+  #zoom-modal{display:none;position:fixed;inset:0;z-index:9500;background:rgba(6,4,2,.93);align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
+  #zoom-modal.open{display:flex}
+  #zoom-modal img{max-width:90vw;max-height:88vh;border-radius:6px;box-shadow:0 24px 70px rgba(0,0,0,.85);animation:zoomIn .18s ease;}
   .back-link:hover{background:rgba(90,66,32,.14)!important;color:#ece0c6!important}
   .copy-btn:hover{background:rgba(217,164,65,.12)!important}
   .skill-card{transition:box-shadow .15s,transform .15s;cursor:pointer;}
@@ -56,6 +62,11 @@
 </style>
 </head>
 <body>
+
+<!-- ════════ ZOOM MODAL ════════ -->
+<div id="zoom-modal" role="dialog" aria-modal="true" onclick="zoomClose()">
+  <img id="zoom-img" src="" alt="">
+</div>
 
 <!-- ════════ MODAL ════════ -->
 <div id="gb-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)gbClose()">
@@ -130,36 +141,9 @@
         </div>
 
         <!-- ARCHITECTURE DIAGRAM -->
-        <div style="margin-top:28px;padding:24px;background:rgba(44,38,32,.05);border:1px solid rgba(90,66,32,.2);border-radius:6px;">
-          <div style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:18px;text-align:center;">Architecture</div>
-          <div class="arch-grid" style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;">
-            <div style="border:1.5px solid rgba(90,66,32,.35);border-radius:5px;padding:16px 18px;background:linear-gradient(135deg,rgba(200,99,31,.06),transparent);">
-              <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember);margin-bottom:10px;">Claude — The Narrator</div>
-              <div style="display:flex;flex-direction:column;gap:5px;">
-                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">game-master skill</div>
-                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">combat-sub-agent skill</div>
-                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">ignarok lore pack</div>
-                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">/hero /backpack /map /save</div>
-              </div>
-              <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(90,66,32,.18);font-size:12px;color:var(--amber);font-style:italic;">narrates · chooses · lore</div>
-            </div>
-            <div class="arch-arrow" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 4px;">
-              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--moss);white-space:nowrap;">tool calls</div>
-              <div style="font-size:20px;color:rgba(90,66,32,.5);">⇄</div>
-              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--royal);white-space:nowrap;">results</div>
-            </div>
-            <div style="border:1.5px solid rgba(76,107,63,.4);border-radius:5px;padding:16px 18px;background:linear-gradient(135deg,rgba(76,107,63,.07),transparent);">
-              <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--moss);margin-bottom:10px;">MCP Server — The Arbiter</div>
-              <div style="display:flex;flex-direction:column;gap:5px;">
-                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">roll_dice · test_luck</div>
-                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">start_combat · resolve_round</div>
-                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">read/write character sheet</div>
-                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);">save_progress · read_world</div>
-              </div>
-              <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(76,107,63,.2);font-size:12px;color:var(--moss);font-style:italic;">decides · persists · arbitrates</div>
-            </div>
-          </div>
-          <p style="margin-top:16px;font-size:13.5px;color:var(--ink2);text-align:center;font-style:italic;">18 MCP tools. The AI calls them; the engine answers. No number is invented in prose.</p>
+        <div style="margin-top:28px;">
+          <img src="../assets/arch/harness_architecture_en.png" alt="System Architecture — ignarok → Claude harness → MCP server → rules/combat/storage → domain" class="arch-img" onclick="zoomOpen(this.src,this.alt)" style="display:block;width:100%;max-width:580px;margin:0 auto;border-radius:6px;box-shadow:0 6px 24px -10px rgba(44,32,16,.35);border:1px solid rgba(90,66,32,.18);mix-blend-mode:multiply;">
+          <p style="margin-top:10px;font-size:12.5px;color:var(--ink2);text-align:center;font-style:italic;">dashed = pluggable swap point · purple = harness (AI) · teal = deterministic engine &nbsp;·&nbsp; <span style="color:var(--amber);">click to zoom ↗</span></p>
         </div>
       </section>
 
@@ -238,6 +222,11 @@
           <div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(90,66,32,.4),transparent);"></div>
         </div>
         <p style="font-size:15px;color:var(--ink2);line-height:1.6;margin-bottom:20px;font-style:italic;">Four commands that read or write state directly via MCP — no story impact. Available at any time, even mid-combat. Click any card to see the output.</p>
+
+        <div style="margin-bottom:22px;">
+          <img src="../assets/arch/user_commands_flow_en.png" alt="Commands flow: player issues a command → /hero /backpack /map /save → MCP server → prints formatted result" class="arch-img" onclick="zoomOpen(this.src,this.alt)" style="display:block;width:100%;max-width:560px;margin:0 auto;border-radius:6px;box-shadow:0 6px 24px -10px rgba(44,32,16,.3);border:1px solid rgba(90,66,32,.18);mix-blend-mode:multiply;">
+          <p style="margin-top:10px;font-size:12.5px;color:var(--ink2);text-align:center;font-style:italic;">solid = read-only · dashed = can write state &nbsp;·&nbsp; <span style="color:var(--amber);">click to zoom ↗</span></p>
+        </div>
 
         <div class="cmds-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
           <div class="cmd-card" onclick="gbCmdModal('hero')" style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
@@ -407,6 +396,8 @@ var GB_SKILLS = {
     title: 'The Combat Arbiter',
     badge: 'Sub-agent · MCP only',
     how: 'When the Game Master encounters a fight it delegates the entire encounter to this sub-agent, passing the hero\'s current stats and the enemy list. The arbiter runs every round through MCP tools — attack strengths, damage, luck tests — and returns a single FinalResult. The master narrates from that result.',
+    diagram: '../assets/arch/combat_turn_flow_en.png',
+    diagramAlt: 'Combat flow: Game Master delegates → sub-agent resolves via MCP → FinalResult → Game Master narrates → MCP persists',
     sectionLabel: 'A combat encounter',
     excerpt: [
       {type:'plain', text:'Handoff from Game Master:'},
@@ -476,6 +467,13 @@ function gbModal(key){
     else                          excerptHtml += text+'\n';
   });
 
+  var diagramHtml = s.diagram ?
+    '<div class="gb-m-sec">'+
+      '<div class="gb-m-sec-title">Flow diagram</div>'+
+      '<img src="'+s.diagram+'" alt="'+(s.diagramAlt||'Flow diagram')+'" class="arch-img" onclick="zoomOpen(this.src,this.alt)" style="display:block;width:100%;border-radius:4px;margin-top:2px;box-shadow:0 2px 10px -4px rgba(44,32,16,.2);mix-blend-mode:multiply;">'+
+      '<p style="margin-top:8px;font-size:11.5px;color:#9a7848;font-style:italic;font-family:\'EB Garamond\',serif;">teal = narrator · coral = combat · gray = persistence &nbsp;·&nbsp; <span style="color:#8a6d3b;">click to zoom ↗</span></p>'+
+    '</div>' : '';
+
   document.getElementById('gb-modal-content').innerHTML =
     '<div class="gb-m-hd">'+
       '<div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:'+s.color+';">'+s.cmd+'</div>'+
@@ -487,6 +485,7 @@ function gbModal(key){
         '<div class="gb-m-sec-title">How it works inside Claude Code</div>'+
         '<p class="gb-m-p">'+s.how+'</p>'+
       '</div>'+
+      diagramHtml+
       '<div class="gb-m-sec">'+
         '<div class="gb-m-sec-title">'+s.sectionLabel+'</div>'+
         '<pre class="gb-m-pre">'+excerptHtml+'</pre>'+
@@ -502,7 +501,24 @@ function gbClose(){
   document.body.style.overflow = '';
 }
 
-document.addEventListener('keydown', function(e){ if(e.key==='Escape') gbClose(); });
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape'){
+    if(document.getElementById('zoom-modal').classList.contains('open')) zoomClose();
+    else gbClose();
+  }
+});
+
+// ── Zoom ──
+function zoomOpen(src, alt){
+  var img = document.getElementById('zoom-img');
+  img.src = src; img.alt = alt || '';
+  document.getElementById('zoom-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function zoomClose(){
+  document.getElementById('zoom-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
 
 // ── Command modal data ──
 var GB_CMDS = {
