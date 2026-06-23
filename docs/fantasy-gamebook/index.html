@@ -11,11 +11,41 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:#14100c}
   @keyframes flick{0%,100%{opacity:.85;transform:scale(1)}45%{opacity:1;transform:scale(1.04)}70%{opacity:.78;transform:scale(.99)}}
+  @keyframes modalIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
   .back-link:hover{background:rgba(90,66,32,.14)!important;color:#ece0c6!important}
-  .copy-btn:hover{background:rgba(217,164,65,.14)!important}
-  .skill-card:hover{box-shadow:0 8px 24px -10px rgba(60,40,10,.45)!important;transform:translateY(-1px)}
-  .skill-card{transition:box-shadow .15s,transform .15s}
-  .tab-btn{transition:background .15s,color .15s}
+  .copy-btn:hover{background:rgba(217,164,65,.12)!important}
+  .skill-card{transition:box-shadow .15s,transform .15s;cursor:pointer;}
+  .skill-card:hover{box-shadow:0 8px 28px -10px rgba(60,40,10,.5)!important;transform:translateY(-2px)}
+  .see-action:hover{background:rgba(90,66,32,.1)!important}
+  .cmd-card{transition:box-shadow .12s,transform .12s,background .12s;cursor:pointer;}
+  .cmd-card:hover{box-shadow:0 4px 18px -8px rgba(60,40,10,.45)!important;transform:translateY(-1px);background:rgba(44,38,32,.07)!important}
+
+  /* ── Modal ── */
+  #gb-modal{display:none;position:fixed;inset:0;z-index:9000;background:rgba(10,7,4,.86);align-items:center;justify-content:center;padding:clamp(12px,4vw,36px)}
+  #gb-modal.open{display:flex}
+  #gb-modal-box{
+    animation:modalIn .2s ease;
+    position:relative;max-width:720px;width:100%;max-height:90vh;overflow-y:auto;
+    background:linear-gradient(#efe3c9,#e7d9bb);border-radius:6px;
+    box-shadow:0 40px 80px -20px rgba(0,0,0,.92),inset 0 0 0 1px rgba(120,90,40,.18),inset 0 0 80px rgba(120,90,40,.1);
+    background-image:radial-gradient(rgba(120,90,40,.05) 1px,transparent 1px),linear-gradient(#efe3c9,#e7d9bb);
+    background-size:5px 5px,100% 100%;
+    color:#2c2620;font-family:'EB Garamond',Georgia,serif;
+  }
+  #gb-modal-close{position:absolute;top:12px;right:14px;background:none;border:1px solid rgba(90,66,32,.3);cursor:pointer;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9a8458;padding:4px 9px;border-radius:3px;}
+  #gb-modal-close:hover{background:rgba(90,66,32,.1)}
+  .gb-m-hd{padding:clamp(20px,3vw,32px) clamp(24px,4vw,44px) clamp(14px,2vw,22px);background:linear-gradient(rgba(255,255,255,.18),transparent)}
+  .gb-m-body{padding:0 clamp(24px,4vw,44px) clamp(24px,4vw,36px)}
+  .gb-m-sec{margin-top:20px}
+  .gb-m-sec-title{font-family:'Cinzel',serif;font-weight:600;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#9a7848;border-bottom:1px solid rgba(90,66,32,.22);padding-bottom:4px;margin-bottom:12px}
+  .gb-m-p{font-size:15.5px;line-height:1.6;color:#4a3820}
+  .gb-m-pre{display:block;background:#2c2620;color:#d4c9ae;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.7;padding:16px 18px;border-radius:4px;overflow-x:auto;white-space:pre;margin-top:2px;}
+  .gb-m-hl{color:#d9a441}
+  .gb-m-tool{color:#88b47a}
+  .gb-m-result{color:#a09070}
+  .gb-m-narr{color:#ece0c6;font-style:italic}
+  .gb-m-sep{color:#5a4a3a}
+
   @media(max-width:640px){
     .arch-grid{grid-template-columns:1fr!important}
     .arch-arrow{transform:rotate(90deg);margin:0 auto}
@@ -27,6 +57,15 @@
 </head>
 <body>
 
+<!-- ════════ MODAL ════════ -->
+<div id="gb-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)gbClose()">
+  <div id="gb-modal-box">
+    <button id="gb-modal-close" onclick="gbClose()">✕ Close</button>
+    <div id="gb-modal-content"></div>
+  </div>
+</div>
+
+<!-- ════════ PAGE ════════ -->
 <div style="--ember:#c8631f;--gold:#d9a441;--parch:#ece0c6;--ink:#2c2620;--ink2:#62553f;--blood:#8f3a2a;--moss:#4c6b3f;--royal:#5a4a7a;--amber:#8a6d3b;font-family:'EB Garamond',Georgia,serif;min-height:100vh;padding:clamp(14px,3.5vw,48px);background:radial-gradient(120% 80% at 18% 0%,rgba(76,107,63,.18),transparent 46%),radial-gradient(120% 80% at 84% 6%,rgba(90,74,122,.14),transparent 50%),radial-gradient(140% 120% at 50% 120%,rgba(0,0,0,.6),transparent 60%),repeating-linear-gradient(90deg,#16120d 0 2px,#171109 2px 4px),linear-gradient(#161109,#0f0c08);">
 <div style="max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:32px;">
 
@@ -94,8 +133,6 @@
         <div style="margin-top:28px;padding:24px;background:rgba(44,38,32,.05);border:1px solid rgba(90,66,32,.2);border-radius:6px;">
           <div style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:18px;text-align:center;">Architecture</div>
           <div class="arch-grid" style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;">
-
-            <!-- Claude box -->
             <div style="border:1.5px solid rgba(90,66,32,.35);border-radius:5px;padding:16px 18px;background:linear-gradient(135deg,rgba(200,99,31,.06),transparent);">
               <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember);margin-bottom:10px;">Claude — The Narrator</div>
               <div style="display:flex;flex-direction:column;gap:5px;">
@@ -106,15 +143,11 @@
               </div>
               <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(90,66,32,.18);font-size:12px;color:var(--amber);font-style:italic;">narrates · chooses · lore</div>
             </div>
-
-            <!-- Arrow -->
             <div class="arch-arrow" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 4px;">
               <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--moss);white-space:nowrap;">tool calls</div>
               <div style="font-size:20px;color:rgba(90,66,32,.5);">⇄</div>
               <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--royal);white-space:nowrap;">results</div>
             </div>
-
-            <!-- MCP Engine box -->
             <div style="border:1.5px solid rgba(76,107,63,.4);border-radius:5px;padding:16px 18px;background:linear-gradient(135deg,rgba(76,107,63,.07),transparent);">
               <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--moss);margin-bottom:10px;">MCP Server — The Arbiter</div>
               <div style="display:flex;flex-direction:column;gap:5px;">
@@ -125,7 +158,6 @@
               </div>
               <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(76,107,63,.2);font-size:12px;color:var(--moss);font-style:italic;">decides · persists · arbitrates</div>
             </div>
-
           </div>
           <p style="margin-top:16px;font-size:13.5px;color:var(--ink2);text-align:center;font-style:italic;">18 MCP tools. The AI calls them; the engine answers. No number is invented in prose.</p>
         </div>
@@ -133,18 +165,18 @@
 
       <!-- §2 THE HARNESS — SKILLS -->
       <section>
-        <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
           <span style="flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1.5px solid var(--ink);border-radius:50%;font-family:'Cinzel Decorative',serif;font-weight:700;font-size:13px;color:var(--ink);">§2</span>
           <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(90,66,32,.4),transparent);"></div>
           <h2 style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);white-space:nowrap;">The Harness — Skills</h2>
           <div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(90,66,32,.4),transparent);"></div>
         </div>
-        <p style="font-size:15.5px;color:var(--ink2);line-height:1.6;margin-bottom:20px;">Three Claude Code skills form the harness — the AI layer that sits on top of the engine. They are installed as Markdown files into your <code style="font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(44,38,32,.08);padding:1px 5px;border-radius:3px;">~/.claude/skills/</code> directory.</p>
+        <p style="font-size:15px;color:var(--ink2);line-height:1.6;margin-bottom:20px;font-style:italic;">Click any card to see it in action inside Claude Code.</p>
 
         <div class="skills-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
 
           <!-- game-master -->
-          <div class="skill-card" style="border:1.5px solid var(--ink);border-radius:5px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
+          <div class="skill-card" onclick="gbModal('game-master')" style="border:1.5px solid var(--ink);border-radius:5px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
             <div style="height:4px;background:var(--ember);"></div>
             <div style="padding:18px 16px;display:flex;flex-direction:column;gap:12px;">
               <div>
@@ -156,11 +188,12 @@
                 <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ember);color:var(--ember);padding:2px 7px;border-radius:3px;">Orchestrator</span>
                 <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:2px 7px;border-radius:3px;">Session loop</span>
               </div>
+              <button class="see-action" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);border:1px solid rgba(90,66,32,.35);padding:6px 10px;border-radius:3px;text-align:center;">See it in action →</button>
             </div>
           </div>
 
           <!-- combat-sub-agent -->
-          <div class="skill-card" style="border:1.5px solid var(--ink);border-radius:5px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
+          <div class="skill-card" onclick="gbModal('combat-sub-agent')" style="border:1.5px solid var(--ink);border-radius:5px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
             <div style="height:4px;background:var(--blood);"></div>
             <div style="padding:18px 16px;display:flex;flex-direction:column;gap:12px;">
               <div>
@@ -172,11 +205,12 @@
                 <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--blood);color:var(--blood);padding:2px 7px;border-radius:3px;">Sub-agent</span>
                 <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:2px 7px;border-radius:3px;">MCP only</span>
               </div>
+              <button class="see-action" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);border:1px solid rgba(90,66,32,.35);padding:6px 10px;border-radius:3px;text-align:center;">See it in action →</button>
             </div>
           </div>
 
           <!-- ignarok -->
-          <div class="skill-card" style="border:1.5px solid var(--ink);border-radius:5px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
+          <div class="skill-card" onclick="gbModal('ignarok')" style="border:1.5px solid var(--ink);border-radius:5px;background:linear-gradient(#e9dcbe,#e3d4b3);overflow:hidden;">
             <div style="height:4px;background:var(--royal);"></div>
             <div style="padding:18px 16px;display:flex;flex-direction:column;gap:12px;">
               <div>
@@ -188,6 +222,7 @@
                 <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--royal);color:var(--royal);padding:2px 7px;border-radius:3px;">Lore pack</span>
                 <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink2);color:var(--ink2);padding:2px 7px;border-radius:3px;">Swappable</span>
               </div>
+              <button class="see-action" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);border:1px solid rgba(90,66,32,.35);padding:6px 10px;border-radius:3px;text-align:center;">See it in action →</button>
             </div>
           </div>
 
@@ -202,30 +237,25 @@
           <h2 style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);white-space:nowrap;">The Commands — Incantations</h2>
           <div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(90,66,32,.4),transparent);"></div>
         </div>
-        <p style="font-size:15.5px;color:var(--ink2);line-height:1.6;margin-bottom:20px;">Four slash commands read or write game state directly via MCP — without altering the narrative. Available at any time, even mid-combat.</p>
+        <p style="font-size:15px;color:var(--ink2);line-height:1.6;margin-bottom:20px;font-style:italic;">Four commands that read or write state directly via MCP — no story impact. Available at any time, even mid-combat. Click any card to see the output.</p>
 
         <div class="cmds-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
-
-          <div style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
+          <div class="cmd-card" onclick="gbCmdModal('hero')" style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
             <code style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--moss);white-space:nowrap;flex-shrink:0;">/hero</code>
             <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin:0;">Print the full character sheet — skill, stamina, luck, gold, provisions, inventory — straight from MCP state. Never a narrated value.</p>
           </div>
-
-          <div style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
+          <div class="cmd-card" onclick="gbCmdModal('backpack')" style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
             <code style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ember);white-space:nowrap;flex-shrink:0;">/backpack</code>
             <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin:0;">List inventory, gold and provisions. Optionally use or consume an item — the state change goes through MCP, not prose.</p>
           </div>
-
-          <div style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
+          <div class="cmd-card" onclick="gbCmdModal('map')" style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
             <code style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--royal);white-space:nowrap;flex-shrink:0;">/map</code>
             <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin:0;">Show current location and every visited zone from real world state. Read-only — changes nothing, reflects the engine exactly.</p>
           </div>
-
-          <div style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
+          <div class="cmd-card" onclick="gbCmdModal('save')" style="display:flex;gap:12px;padding:14px 16px;border:1px solid rgba(90,66,32,.28);border-radius:5px;background:rgba(44,38,32,.03);">
             <code style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--amber);white-space:nowrap;flex-shrink:0;">/save</code>
             <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin:0;">Checkpoint current progress via MCP. Accepts an optional slot name. Confirms with the slot identifier on success.</p>
           </div>
-
         </div>
       </section>
 
@@ -240,7 +270,7 @@
 
         <div class="install-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
 
-          <!-- PATH A: git clone (works now) -->
+          <!-- PATH A: git clone -->
           <div style="border:2px solid var(--ink);border-radius:6px;overflow:hidden;">
             <div style="height:4px;background:linear-gradient(90deg,var(--moss),var(--royal));"></div>
             <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
@@ -249,56 +279,50 @@
                 <h3 style="font-family:'Cinzel',serif;font-weight:600;font-size:16px;color:var(--ink);">Clone the Engine</h3>
                 <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin-top:6px;">Full source — run the engine locally. The <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(44,38,32,.08);padding:1px 4px;border-radius:2px;">.mcp.json</code> auto-registers the server when you open the directory in Claude Code.</p>
               </div>
-
               <div style="display:flex;flex-direction:column;gap:10px;">
                 <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);">Step 1 — Clone</div>
                 <div style="display:flex;align-items:center;gap:8px;background:#2c2620;border-radius:4px;padding:10px 12px;border:1px solid #3e3428;">
                   <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#ece0c6;flex:1;word-break:break-all;">git clone https://github.com/rc-ventura/fantasy-gamebook-engine</code>
                   <button onclick="dcCopy(this)" data-copy="git clone https://github.com/rc-ventura/fantasy-gamebook-engine" class="copy-btn" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;padding:3px 8px;border:1px solid rgba(217,164,65,.3);border-radius:3px;"><span data-copylabel="">Copy</span></button>
                 </div>
-
                 <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);">Step 2 — Install deps</div>
                 <div style="display:flex;align-items:center;gap:8px;background:#2c2620;border-radius:4px;padding:10px 12px;border:1px solid #3e3428;">
                   <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#ece0c6;flex:1;">cd fantasy-gamebook-engine &amp;&amp; uv sync</code>
                   <button onclick="dcCopy(this)" data-copy="cd fantasy-gamebook-engine && uv sync" class="copy-btn" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;padding:3px 8px;border:1px solid rgba(217,164,65,.3);border-radius:3px;"><span data-copylabel="">Copy</span></button>
                 </div>
-
                 <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);">Step 3 — Open in Claude Code</div>
                 <div style="background:#2c2620;border-radius:4px;padding:10px 12px;border:1px solid #3e3428;">
                   <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#ece0c6;display:block;">claude .</code>
-                  <div style="font-size:12px;color:rgba(236,224,198,.5);margin-top:5px;">MCP server auto-registers from .mcp.json</div>
+                  <div style="font-size:12px;color:rgba(236,224,198,.45);margin-top:5px;">MCP server auto-registers from .mcp.json</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- PATH B: PyPI/uvx (coming soon) -->
+          <!-- PATH B: PyPI coming soon -->
           <div style="border:1.5px dashed rgba(90,66,32,.45);border-radius:6px;overflow:hidden;opacity:.85;">
             <div style="height:4px;background:linear-gradient(90deg,rgba(90,74,122,.5),rgba(217,164,65,.4));"></div>
             <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
               <div>
                 <div style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:6px;">Coming Soon — PyPI Release</div>
                 <h3 style="font-family:'Cinzel',serif;font-weight:600;font-size:16px;color:var(--ink);">Install Without Cloning</h3>
-                <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin-top:6px;">Once published to PyPI, <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(44,38,32,.08);padding:1px 4px;border-radius:2px;">uvx</code> fetches and runs the engine with no local Python setup. The MCP config becomes a single URL entry.</p>
+                <p style="font-size:14px;line-height:1.5;color:var(--ink2);margin-top:6px;">Once published to PyPI, <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(44,38,32,.08);padding:1px 4px;border-radius:2px;">uvx</code> fetches and runs the engine with no local Python setup.</p>
               </div>
-
               <div style="display:flex;flex-direction:column;gap:10px;">
-                <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(154,110,59,.7);">Step 1 — Install skills from the Grimoire</div>
+                <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(154,110,59,.7);">Step 1 — Install skills</div>
                 <div style="background:rgba(44,38,32,.12);border-radius:4px;padding:10px 12px;border:1px solid rgba(62,52,40,.5);">
                   <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:rgba(236,224,198,.6);">bash install.sh fantasy-gamebook</code>
                 </div>
-
-                <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(154,110,59,.7);">Step 2 — MCP config (auto via uvx)</div>
+                <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(154,110,59,.7);">Step 2 — MCP config (via uvx)</div>
                 <div style="background:rgba(44,38,32,.12);border-radius:4px;padding:10px 12px;border:1px solid rgba(62,52,40,.5);">
                   <code style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(236,224,198,.6);display:block;white-space:pre;">{"mcpServers":{"gamebook":{
   "command":"uvx",
   "args":["gamebook"]
 }}}</code>
                 </div>
-
                 <div style="padding:10px 12px;background:rgba(90,66,32,.08);border:1px solid rgba(90,66,32,.2);border-radius:4px;">
                   <div style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:4px;">In Progress</div>
-                  <p style="font-size:13px;color:var(--ink2);line-height:1.4;">PyPI publication requires <code style="font-family:'JetBrains Mono',monospace;font-size:11px;">uv publish</code> from the engine repo. Follow <a href="https://github.com/rc-ventura/fantasy-gamebook-engine" target="_blank" style="color:var(--moss);">the repo</a> for the release.</p>
+                  <p style="font-size:13px;color:var(--ink2);line-height:1.4;">Requires <code style="font-family:'JetBrains Mono',monospace;font-size:11px;">uv publish</code> from the engine repo. Follow <a href="https://github.com/rc-ventura/fantasy-gamebook-engine" target="_blank" style="color:var(--moss);">the repo</a> for the release.</p>
                 </div>
               </div>
             </div>
@@ -315,37 +339,23 @@
           <h2 style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);white-space:nowrap;">Begin Your Adventure</h2>
           <div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(90,66,32,.4),transparent);"></div>
         </div>
-
         <div style="display:flex;flex-direction:column;gap:14px;">
           <p style="font-size:16px;line-height:1.6;color:var(--ink2);">Once the engine is cloned and Claude Code is open in the directory, the MCP server is live. Type the first incantation:</p>
-
-          <div style="display:flex;align-items:center;gap:10px;background:#2c2620;border-radius:4px;padding:14px 16px;border:1px solid rgba(76,107,63,.4);box-shadow:0 0 0 1px rgba(76,107,63,.1);">
+          <div style="display:flex;align-items:center;gap:10px;background:#2c2620;border-radius:4px;padding:14px 16px;border:1px solid rgba(76,107,63,.4);">
             <span style="color:var(--moss);font-size:16px;">▸</span>
             <code style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#ece0c6;flex:1;">/game-master</code>
             <button onclick="dcCopy(this)" data-copy="/game-master" class="copy-btn" style="all:unset;cursor:pointer;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;padding:4px 10px;border:1px solid rgba(217,164,65,.3);border-radius:3px;"><span data-copylabel="">Copy</span></button>
           </div>
-
           <div style="display:flex;flex-direction:column;gap:10px;padding:18px;border:1px solid rgba(90,66,32,.22);border-radius:5px;background:rgba(44,38,32,.03);">
             <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);">What happens next</div>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--moss);flex-shrink:0;margin-top:1px;">1.</span>
-                <p style="font-size:15px;line-height:1.5;color:var(--ink2);margin:0;">Claude reads the <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(44,38,32,.08);padding:1px 4px;border-radius:2px;">ignarok</code> lore pack and checks for an existing character via MCP.</p>
-              </div>
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--moss);flex-shrink:0;margin-top:1px;">2.</span>
-                <p style="font-size:15px;line-height:1.5;color:var(--ink2);margin:0;">If no hero exists, the engine rolls your attributes (skill, stamina, luck) via MCP — not in prose.</p>
-              </div>
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--moss);flex-shrink:0;margin-top:1px;">3.</span>
-                <p style="font-size:15px;line-height:1.5;color:var(--ink2);margin:0;">Claude narrates the opening scene of the Grey Mountain and offers your first choices. The adventure begins at §1.</p>
-              </div>
-            </div>
+            <div style="display:flex;gap:10px;"><span style="font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--moss);flex-shrink:0;margin-top:1px;">1.</span><p style="font-size:15px;line-height:1.5;color:var(--ink2);margin:0;">Claude reads the ignarok lore pack and checks MCP for an existing character.</p></div>
+            <div style="display:flex;gap:10px;"><span style="font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--moss);flex-shrink:0;margin-top:1px;">2.</span><p style="font-size:15px;line-height:1.5;color:var(--ink2);margin:0;">If no hero exists, the engine rolls your attributes via MCP — not in prose.</p></div>
+            <div style="display:flex;gap:10px;"><span style="font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--moss);flex-shrink:0;margin-top:1px;">3.</span><p style="font-size:15px;line-height:1.5;color:var(--ink2);margin:0;">Claude narrates the opening of the Grey Mountain. The adventure begins at §1.</p></div>
           </div>
         </div>
       </section>
 
-      <!-- FOOTER / BACK -->
+      <!-- FOOTER -->
       <div style="text-align:center;border-top:1px solid rgba(90,66,32,.3);padding-top:28px;display:flex;flex-direction:column;gap:16px;align-items:center;">
         <div style="color:var(--moss);font-size:16px;">◆ ◆ ◆</div>
         <p style="font-style:italic;font-size:16px;color:var(--ink2);">"You stand at the foot of the Grey Mountain. The wind smells of ash and old iron. Turn to §1."</p>
@@ -360,11 +370,254 @@
 </div>
 
 <script>
+// ── Copy ──
 function dcCopy(btn){
   var text=btn.getAttribute('data-copy')||'';
   try{navigator.clipboard&&navigator.clipboard.writeText(text);}catch(e){}
   var lbl=btn.querySelector('[data-copylabel]');
   if(lbl&&!lbl.dataset.busy){var o=lbl.textContent;lbl.dataset.busy='1';lbl.textContent='Copied!';setTimeout(function(){lbl.textContent=o;delete lbl.dataset.busy;},1400);}
+}
+
+// ── Modal data ──
+var GB_SKILLS = {
+  'game-master': {
+    cmd: '/game-master',
+    color: '#c8631f',
+    title: 'The Narrator',
+    badge: 'Orchestrator · Session loop',
+    how: 'Activated at the start of every play session. Claude reads the active adventure lore, loads real character state via MCP, then narrates turns in second person with numbered choices. Every number — dice, damage, luck — comes from a tool result. Claude only turns those results into prose.',
+    sectionLabel: 'A session excerpt',
+    excerpt: [
+      {type:'tool', text:'[read_character_sheet]'},
+      {type:'result', text:' → name: Aldric · skill 7 · stamina 18 · luck 9'},
+      {type:'result', text:'   gold: 3 · provisions: 3 · inventory: [lantern, letter]'},
+      {type:'tool', text:'[read_world]'},
+      {type:'result', text:' → location: Base Camp · visited: [Foothills]'},
+      {type:'sep', text:'────────────────────────────────────────────────────'},
+      {type:'narr', text:'The Grey Mountain is three days above you and one\nwrong step from taking you.'},
+      {type:'narr', text:'You shoulder your pack at first light. The crossroads\npost is rotted but the carvings still read:\nASHFIELD PASS — 2 LEAGUES.'},
+      {type:'narr', text:'Behind you the valley is still green.\nAhead, the tree line thins to rock and ash.\n\nYour provisions hold for six days if you\'re careful.\nYour blade is sharp. Your luck, untested.'},
+      {type:'sep', text:'────────────────────────────────────────────────────'},
+      {type:'plain', text:'1.  Take the eastern path — narrow, sheltered from wind.\n2.  Climb the main trail — faster, more exposed.\n3.  Rest at the ruins before ascending.'}
+    ]
+  },
+  'combat-sub-agent': {
+    cmd: '/combat-sub-agent',
+    color: '#8f3a2a',
+    title: 'The Combat Arbiter',
+    badge: 'Sub-agent · MCP only',
+    how: 'When the Game Master encounters a fight it delegates the entire encounter to this sub-agent, passing the hero\'s current stats and the enemy list. The arbiter runs every round through MCP tools — attack strengths, damage, luck tests — and returns a single FinalResult. The master narrates from that result.',
+    sectionLabel: 'A combat encounter',
+    excerpt: [
+      {type:'plain', text:'Handoff from Game Master:'},
+      {type:'result', text:' hero    · Aldric · skill 7 · stamina 18 · luck 9'},
+      {type:'result', text:' enemies · Cave-Troll · skill 6 · stamina 8'},
+      {type:'result', text:' flee    · false'},
+      {type:'sep', text:''},
+      {type:'tool', text:'[start_combat]'},
+      {type:'result', text:' → hero_attack: 14 · enemy_attack: 11'},
+      {type:'sep', text:'── Round 1 ──────────────────────────────────────────'},
+      {type:'narr', text:'You strike first. The troll\'s swing goes wide.\nYour blade opens a line across its forearm.'},
+      {type:'plain', text:'  ALDRIC     skill 7   stamina 18   luck 9\n  CAVE-TROLL skill 6   stamina  6   ← −2 damage'},
+      {type:'sep', text:''},
+      {type:'plain', text:'  Test your luck? (y/n)  ›  y'},
+      {type:'tool', text:'[test_luck]'},
+      {type:'result', text:' → { success: true, luck_current: 8 }'},
+      {type:'narr', text:'Fortune holds. The wound is deeper than it looked.'},
+      {type:'sep', text:'── Round 2 ──────────────────────────────────────────'},
+      {type:'tool', text:'[resolve_combat_round]'},
+      {type:'result', text:' → hero_attack: 9 · enemy_attack: 13'},
+      {type:'narr', text:'The troll catches you across the ribs. You stagger.'},
+      {type:'plain', text:'  ALDRIC     skill 7   stamina 16   luck 8   ← −2 damage\n  CAVE-TROLL skill 6   stamina  6'},
+      {type:'sep', text:''},
+      {type:'plain', text:'  Test your luck? (y/n)  ›  n'},
+      {type:'tool', text:'[end_combat]'},
+      {type:'result', text:' → { outcome: "victory", hero_stamina: 16 }'},
+      {type:'sep', text:''},
+      {type:'hl', text:'FinalResult → Game Master'},
+      {type:'result', text:' outcome: victory · stamina: 16 · luck: 8'}
+    ]
+  },
+  'ignarok': {
+    cmd: '/ignarok',
+    color: '#5a4a7a',
+    title: 'The Grey Mountain Lore',
+    badge: 'Adventure module · Swappable',
+    how: 'A static lore pack — the "AdventureModule" contract. The Game Master reads it at session start and improvises every scene inside its boundaries. It contains no game rules and no numbers in prose; all randomness and state goes through MCP. Swap this file to play a completely different adventure without touching the engine.',
+    sectionLabel: 'Module contents',
+    excerpt: [
+      {type:'hl', text:'Ignarok — The Ashes of the Grey Mountain'},
+      {type:'result', text:'Tone: grim, terse high fantasy · second person · present-tense dread'},
+      {type:'sep', text:'── Six Zones ───────────────────────────────────────────'},
+      {type:'plain', text:' I    Foothills        wolves, a crossroads, a merchant\n                       of uncertain loyalties\n\n II   Ashfield Pass    ice-shelf traps, a burnt shrine,\n                       the first real enemy cluster\n\n III  Gatekeeper Hall  a named boss — fight or answer\n                       the riddle and pass\n\n IV   The Midway Caves darkness and echoes;\n                       a prisoner worth freeing\n\n V    Inner Sanctum    Malachar\'s servants, thinning air\n\n VI   Summit Chamber   Malachar · the Rite-Stone · the end'},
+      {type:'sep', text:'── Bestiary (sample) ───────────────────────────────────'},
+      {type:'plain', text:' CAVE-TROLL       skill  6   stamina  8\n STONE-SENTINEL   skill  9   stamina 12   immune to luck\n MALACHAR         skill 11   stamina 16   final boss'},
+      {type:'sep', text:'── Victory condition ───────────────────────────────────'},
+      {type:'narr', text:'Destroy the Rite-Stone before the third moonrise.\nThe valley is saved. You are not promised to survive.'},
+      {type:'sep', text:'── To run a different adventure ────────────────────────'},
+      {type:'plain', text:'Replace this SKILL.md with your own lore pack.\nThe engine and MCP contract never change.\nOnly the fiction does.'}
+    ]
+  }
+};
+
+function gbModal(key){
+  var s = GB_SKILLS[key];
+  if(!s) return;
+
+  // Build excerpt HTML
+  var excerptHtml = '';
+  s.excerpt.forEach(function(line){
+    var text = (line.text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    if(line.type==='tool')    excerptHtml += '<span class="gb-m-tool">'+text+'</span>\n';
+    else if(line.type==='result') excerptHtml += '<span class="gb-m-result">'+text+'</span>\n';
+    else if(line.type==='narr')   excerptHtml += '<span class="gb-m-narr">'+text+'</span>\n\n';
+    else if(line.type==='hl')     excerptHtml += '<span class="gb-m-hl">'+text+'</span>\n';
+    else if(line.type==='sep')    excerptHtml += '<span class="gb-m-sep">'+text+'</span>\n';
+    else                          excerptHtml += text+'\n';
+  });
+
+  document.getElementById('gb-modal-content').innerHTML =
+    '<div class="gb-m-hd">'+
+      '<div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:'+s.color+';">'+s.cmd+'</div>'+
+      '<div style="font-family:\'Cinzel\',serif;font-weight:700;font-size:clamp(18px,2.2vw,24px);letter-spacing:.01em;margin:6px 0 4px;">'+s.title+'</div>'+
+      '<div style="font-family:\'Cinzel\',serif;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#9a7848;">'+s.badge+'</div>'+
+    '</div>'+
+    '<div class="gb-m-body">'+
+      '<div class="gb-m-sec">'+
+        '<div class="gb-m-sec-title">How it works inside Claude Code</div>'+
+        '<p class="gb-m-p">'+s.how+'</p>'+
+      '</div>'+
+      '<div class="gb-m-sec">'+
+        '<div class="gb-m-sec-title">'+s.sectionLabel+'</div>'+
+        '<pre class="gb-m-pre">'+excerptHtml+'</pre>'+
+      '</div>'+
+    '</div>';
+
+  document.getElementById('gb-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function gbClose(){
+  document.getElementById('gb-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') gbClose(); });
+
+// ── Command modal data ──
+var GB_CMDS = {
+  'hero': {
+    cmd: '/hero',
+    color: '#4c6b3f',
+    title: 'Character Sheet',
+    badge: 'Read-only · Always available',
+    how: 'Calls read_character_sheet on the MCP server and formats the result. The values shown are always real engine state — never a number Claude remembered from the narrative. Works even mid-combat.',
+    sectionLabel: 'Command output',
+    excerpt: [
+      {type:'tool', text:'[read_character_sheet]'},
+      {type:'result', text:' → alive: true'},
+      {type:'sep', text:''},
+      {type:'hl', text:'═══ Aldric ═══════════════════════════════════════'},
+      {type:'plain', text:'SKILL      7 / 7     (current / initial)\nSTAMINA   16 / 20\nLUCK       8 / 9'},
+      {type:'sep', text:''},
+      {type:'plain', text:'Gold        3\nProvisions  3'},
+      {type:'sep', text:''},
+      {type:'plain', text:'Inventory:\n  · Iron lantern  (lit)\n  · A letter       (unopened)'},
+      {type:'sep', text:''},
+      {type:'plain', text:'Conditions: none'}
+    ]
+  },
+  'backpack': {
+    cmd: '/backpack',
+    color: '#c8631f',
+    title: 'Backpack',
+    badge: 'Read + optional state change',
+    how: 'Lists inventory from real MCP state, then lets the player use or consume an item. Reading is a pure read-out; using an item calls use_item on the MCP server — the state change never happens in prose. Stamina and inventory update atomically.',
+    sectionLabel: 'Command output',
+    excerpt: [
+      {type:'tool', text:'[read_character_sheet]'},
+      {type:'sep', text:''},
+      {type:'hl', text:'═══ Backpack ══════════════════════════════════════'},
+      {type:'plain', text:'Gold        3\nProvisions  3'},
+      {type:'sep', text:''},
+      {type:'plain', text:'Inventory:\n  · Iron lantern  (lit)\n  · A letter       (unopened)'},
+      {type:'sep', text:'──────────────────────────────────────────────────'},
+      {type:'plain', text:'Use an item? Type its name — or just continue.\n> provisions'},
+      {type:'sep', text:''},
+      {type:'tool', text:'[use_item("provisions")]'},
+      {type:'result', text:' → { stamina_gained: 4, stamina_new: 20, provisions_remaining: 2 }'},
+      {type:'sep', text:''},
+      {type:'narr', text:'You eat a provision. Warmth settles into your bones.'},
+      {type:'plain', text:'STAMINA  20 / 20'}
+    ]
+  },
+  'map': {
+    cmd: '/map',
+    color: '#5a4a7a',
+    title: 'Map',
+    badge: 'Read-only · World state',
+    how: 'Calls read_world on the MCP server and formats the result into a structured map view. Shows current location and the full list of visited zones. Purely read-only — the world state does not change. Useful to orient yourself after a long fight or context compaction.',
+    sectionLabel: 'Command output',
+    excerpt: [
+      {type:'tool', text:'[read_world]'},
+      {type:'sep', text:''},
+      {type:'hl', text:'═══ Map — Grey Mountain ══════════════════════════'},
+      {type:'plain', text:'You are here:  Ashfield Pass'},
+      {type:'sep', text:''},
+      {type:'plain', text:'Visited:\n  ✓ Foothills\n  ✓ Base Camp\n  ✓ Ashfield Pass   ← current'},
+      {type:'sep', text:''},
+      {type:'plain', text:'Ahead (unexplored):\n  · Gatekeeper\'s Hall\n  · The Midway Caves\n  · Inner Sanctum\n  · Summit Chamber'}
+    ]
+  },
+  'save': {
+    cmd: '/save',
+    color: '#8a6d3b',
+    title: 'Save Progress',
+    badge: 'Write · Checkpoint',
+    how: 'Calls save_progress on the MCP server with an optional slot name (from $ARGUMENTS). On success, confirms with the slot identifier. Does not change the story or any game stats — it only persists a snapshot of the current character sheet and world state so the session can be resumed later.',
+    sectionLabel: 'Command output',
+    excerpt: [
+      {type:'tool', text:'[save_progress(slot="checkpoint-1")]'},
+      {type:'result', text:' → { ok: true, slot: "checkpoint-1" }'},
+      {type:'sep', text:''},
+      {type:'hl', text:'✔  Progress saved — checkpoint "checkpoint-1".'},
+      {type:'sep', text:''},
+      {type:'plain', text:'   Aldric · skill 7 · stamina 16 · luck 8\n   Location: Ashfield Pass\n   Saved: 2026-06-23 00:31'}
+    ]
+  }
+};
+
+function gbCmdModal(key){
+  var c = GB_CMDS[key];
+  if(!c) return;
+  var excerptHtml = '';
+  c.excerpt.forEach(function(line){
+    var text = (line.text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    if(line.type==='tool')        excerptHtml += '<span class="gb-m-tool">'+text+'</span>\n';
+    else if(line.type==='result') excerptHtml += '<span class="gb-m-result">'+text+'</span>\n';
+    else if(line.type==='narr')   excerptHtml += '<span class="gb-m-narr">'+text+'</span>\n\n';
+    else if(line.type==='hl')     excerptHtml += '<span class="gb-m-hl">'+text+'</span>\n';
+    else if(line.type==='sep')    excerptHtml += '<span class="gb-m-sep">'+text+'</span>\n';
+    else                          excerptHtml += text+'\n';
+  });
+  document.getElementById('gb-modal-content').innerHTML =
+    '<div class="gb-m-hd">'+
+      '<div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:'+c.color+';">'+c.cmd+'</div>'+
+      '<div style="font-family:\'Cinzel\',serif;font-weight:700;font-size:clamp(18px,2.2vw,24px);letter-spacing:.01em;margin:6px 0 4px;">'+c.title+'</div>'+
+      '<div style="font-family:\'Cinzel\',serif;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#9a7848;">'+c.badge+'</div>'+
+    '</div>'+
+    '<div class="gb-m-body">'+
+      '<div class="gb-m-sec">'+
+        '<div class="gb-m-sec-title">How it works</div>'+
+        '<p class="gb-m-p">'+c.how+'</p>'+
+      '</div>'+
+      '<div class="gb-m-sec">'+
+        '<div class="gb-m-sec-title">'+c.sectionLabel+'</div>'+
+        '<pre class="gb-m-pre">'+excerptHtml+'</pre>'+
+      '</div>'+
+    '</div>';
+  document.getElementById('gb-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 </script>
 </body>
